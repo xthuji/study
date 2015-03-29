@@ -1,2 +1,5 @@
-/test/target
-/client_test/target
+/**/target
+/**/.settings
+/**/.classpath
+/**/.project
+/**/.log
