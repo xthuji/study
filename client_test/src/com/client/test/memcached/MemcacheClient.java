@@ -1,7 +1,5 @@
 package com.client.test.memcached;
 
-import static org.junit.Assert.*;
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.InetSocketAddress;
@@ -17,10 +15,13 @@ import net.rubyeye.xmemcached.MemcachedClientBuilder;
 import net.rubyeye.xmemcached.XMemcachedClientBuilder;
 import net.rubyeye.xmemcached.auth.AuthInfo;
 import net.rubyeye.xmemcached.command.BinaryCommandFactory;
+import net.rubyeye.xmemcached.command.TextCommandFactory;
 import net.rubyeye.xmemcached.exception.MemcachedException;
+import net.rubyeye.xmemcached.impl.KetamaMemcachedSessionLocator;
 import net.rubyeye.xmemcached.transcoders.StringTranscoder;
 import net.rubyeye.xmemcached.utils.AddrUtil;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,9 +34,12 @@ public class MemcacheClient {
 	public void init() throws Exception {
 		MemcachedClientBuilder builder = new XMemcachedClientBuilder(
 				AddrUtil.getAddresses("192.168.6.7:11000"));
+		// 192.168.6.165:10000
 		// AddrUtil.getAddresses("server1:11211 server2:11211")
 		// 宕机报警
 //		builder.setFailureMode(true);
+		builder.setCommandFactory(new TextCommandFactory());
+//		builder.setSessionLocator(new KetamaMemcachedSessionLocator());
 //		// 使用二进制文件
 //		builder.setCommandFactory(new BinaryCommandFactory());
 //		/**
@@ -122,12 +126,20 @@ public class MemcacheClient {
 			 * 第二个是expire时间（单位秒），超过这个时间,memcached将这个数据替换出去，0表示永久存储（默认是一个月)
 			 * 第三个参数就是实际存储的数据
 			 */
-			client.set("hello", 0, "Hello,xmemcached");
+//			192.168.6.7:11000 
+//			client.set("hello", 0, "Hello,xmemcached");
 			String value = client.get("hello");
 			System.out.println("hello=" + value);
-			client.delete("hello");
+			boolean result = client.delete("hello");
 			value = client.get("hello");
-			System.out.println("hello=" + value);
+			System.out.println("hello=" + value +",result="+result);
+//			192.168.6.165:10000
+//			client.set("hello2", 0, "Hello,xmemcached");
+			String value2 = client.get("hello2");
+			System.out.println("hello2=" + value2);
+			boolean result2 = client.delete("hello2");
+			value2 = client.get("hello2");
+            System.out.println("hello2=" + value2 +",result="+result2);
 
 			// value=client.get(“hello”,3000);
 
@@ -136,12 +148,12 @@ public class MemcacheClient {
 			 * 原理类似乐观锁，每次请求存储某个数据同时要附带一个cas值， memcached比对这个cas值与当前存储数据的cas值是否相等，
 			 * 如果相等就让新的数据覆盖老的数据，如果不相等就认为更新失败， 这在并发环境下特别有用
 			 */
-			GetsResponse<Integer> result = client.gets("a");
-			long cas = result.getCas();
-			// 尝试将a的值更新为2
-			if (!client.cas("a", 0, 2, cas)) {
-				System.err.println("cas error");
-			}
+//			GetsResponse<Integer> result = client.gets("a");
+//			long cas = result.getCas();
+//			// 尝试将a的值更新为2
+//			if (!client.cas("a", 0, 2, cas)) {
+//				System.err.println("cas error");
+//			}
 		} catch (MemcachedException e) {
 			System.err.println("MemcachedClient operation fail");
 			e.printStackTrace();
@@ -269,6 +281,34 @@ public class MemcacheClient {
 		String value = client.get("1");
 		System.out.println("hello=" + value);
 	}
+	
+	@Test
+    public void testForeach() throws Exception {
+	    System.out.println("testForeach start");
+	    int size = 1000;
+        String key = "hello";
+        for (int i = 0; i < size; i++) {
+            client.set(key+i, 0, "Hello,xmemcached"+i);
+            Thread.sleep(10);
+        }
+        System.out.println("set done");
+        for (int i = 0; i < size; i++) {
+            boolean result = client.delete(key+i);
+            if (!result) {
+                System.err.println("delete key"+i);
+            }
+            Thread.sleep(10);
+        }
+        System.out.println("delete done");
+        for (int i = 0; i < size; i++) {
+            String value = client.get(key+i);
+            if (StringUtils.isNotEmpty(value)) {
+                System.out.println("get key"+i);
+            }
+        }
+        System.out.println("testForeach stop");
+
+    }
 }
 
 class Name implements Serializable {

@@ -1,5 +1,6 @@
 package com.work.test.tools;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -22,7 +23,12 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import com.google.gson.TypeAdapter;
+import com.google.gson.TypeAdapterFactory;
 import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
+import com.google.gson.stream.JsonWriter;
 
 /**
  * json 简单操作的工具类
@@ -171,6 +177,22 @@ public class GsonUtils {
 		return null;
 	}
 
+
+    /**
+     * 将json转换成bean对象
+     * 
+     * @param jsonStr
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T jsonToBean(String jsonStr, Type type) {
+        Object obj = null;
+        if (gson != null) {
+            obj = gson.fromJson(jsonStr, type);  
+            return (T) obj;
+        }
+        return null;
+    }
 	/**
 	 * 将json转换成bean对象
 	 * 
@@ -316,5 +338,5 @@ public class GsonUtils {
 		}
 		return map;
 	}
-
+	
 }
