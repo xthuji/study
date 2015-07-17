@@ -1,0 +1,54 @@
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<script type="text/javascript">  
+    function change2_s(str) {
+        var result_str = str.replace(/([^A-Z])([A-Z])/g, function($0, $1, $2) {
+            return $1 + "_" + $2.toLowerCase();
+        });
+        return result_str;
+    }
+    
+    function change2S(str) {
+        var resultStr = str.replace(/_([a-z])/g, function($0, $1) {
+            return $1.toUpperCase();
+        });
+        return resultStr;
+    }
+    
+    function changeStr2_(flag) {
+        var inputStr = document.getElementById("inputArea").value;
+        var resultStr = "";
+        if (flag) {
+            resultStr = change2_s(inputStr);
+        } else {
+            resultStr = change2S(inputStr);
+        }
+        //alert(resultStr);
+        document.getElementById("outputArea").innerHTML = resultStr;
+    }
+</script>  
+<div>
+    <table>
+        <tr>
+            <td>
+                <span>
+                    <div>输入</div>
+                    <textarea rows="10" cols="30" id="inputArea"></textarea>
+                    <br></br>
+                </span>
+            </td> 
+            <td>
+                <span>
+                    <input type="button" id="test1" value="转换成--&gt;__" onclick="changeStr2_(true)" /><br></br>
+                    <input type="button" id="test1" value="转换成--&gt;驼峰" onclick="changeStr2_(false)" /><br></br>
+                </span>
+            </td>
+            <td>
+                <span>
+                    <div>输出</div>
+                    <textarea rows="10" cols="30" id="outputArea"></textarea>
+                    <br></br>
+                </span>
+            </td>
+        </tr>
+    </table>
+</div>

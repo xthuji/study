@@ -3,4 +3,5 @@
 /**/.log
 /**/*.classpath
 /**/*.project
-
+/**/bin
+*.class

@@ -1,0 +1,1058 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<title>问题查找</title>
+<script language="javascript" type="text/javascript" src="jquery-latest.min.js"></script>
+<script language="javascript" type="text/javascript" src="My97DatePicker/WdatePicker.js"></script>
+<script language="javascript" type="text/javascript" src="common.js"></script>
+<script type="text/javascript">
+    var hostEnum = {
+        preHost11 : "59.151.100.36",//灰度host
+        preHost12 : "192.168.0.36",//灰度host
+        preHost13 : "192.168.7.36",//灰度host
+
+        preHost21 : "59.151.100.64",//听书灰度host
+        preHost22 : "192.168.0.233",//听书灰度host
+        preHost23 : "192.168.7.64",//听书灰度host
+
+        prodHost1 : "192.168.7.86",//正式host
+        prodHost2 : "192.168.7.175",//听书正式host
+    };
+
+
+    var ting_list = [hostEnum.preHost21, hostEnum.preHost22, hostEnum.preHost23, hostEnum.prodHost2]; //听书host
+    var du_list = [hostEnum.preHost11, hostEnum.preHost12, hostEnum.preHost13, hostEnum.prodHost1]; //听书host
+
+    var host = hostEnum.preHost11;//实际查询地址的host
+
+    //灰度测试帐号列表
+    var greyUserList = ["zhanzhanx","xingqisan","13341181452","i61945646","i75214144","i117162579","i90591874","xingm00o","libaisan","xingapple","xingfood","xingbangding","xinchongzhi","xiaoxingxing","summerspring","yinhangka","opkillyou","i180814000","i172725527","i66666665","i111744161","i124908008","kubakuba","xingkoo666","xingpear","wmmady","xingyooo","i108087707","i189304088","i66600753","i86701234","i187805979","i108088884","wtad1299","20130312xjz","i288303866","i187888888","i177887777","xing201403201212","i344468185","i344447618","i344448258","i344448432","i344448703","i344448864","i344449166","i344449397","i344449571","i344450421","i344450620","i10999866","i91201001","i322289999","i102199000","xingnice","xingmissyou","i130500150","xingsoop","i116760063","i338011188","i198863003","libaiyi","xing201403201212","xingqiri","i516000745", "i520303080", "i525184700", "i525184914", "i525185073", "i525185175", "i525185283", "i525185420", "i525185515", "i525185617", "i525185698", "i525186222", "i525186327"];
+
+    var DUSHU = "dushu";
+    var TINGSHU = "tingshu";
+
+    // 改变user
+    function changeUserName(userName){
+        //修改所有input框的用户名
+        $("input[name='usr']").val(userName);
+        //判断是否灰度测试帐号
+        var value = greyUserList.indexOf(userName);
+        if (value>=0) {
+            $("#usr_grey").html("*灰度测试帐号");
+        }else{
+            $("#usr_grey").html("*非测试帐号");
+        }
+    }
+    //切换环境
+    function changeEnv(){
+        host = $("input[name='host']:checked").val();
+    }
+
+    //替换host
+    function changeHost(url){
+        var pre_host = hostEnum.preHost11;
+        var checkHostFlag = false;
+        if (url.indexOf(hostEnum.preHost11)>=0) {
+            checkHostFlag = checkHost(DUSHU);
+            pre_host = hostEnum.preHost11;
+        }else if (url.indexOf(hostEnum.preHost12)>=0) {
+            checkHostFlag = checkHost(DUSHU);
+            pre_host = hostEnum.preHost12;
+        }else if (url.indexOf(hostEnum.preHost13)>=0) {
+            checkHostFlag = checkHost(DUSHU);
+            pre_host = hostEnum.preHost13;
+        }else if (url.indexOf(hostEnum.preHost21)>=0) {
+            checkHostFlag = checkHost(TINGSHU);
+            pre_host = hostEnum.preHost21;
+        }else if (url.indexOf(hostEnum.preHost22)>=0) {
+            checkHostFlag = checkHost(TINGSHU);
+            pre_host = hostEnum.preHost22;
+        }else if (url.indexOf(hostEnum.preHost23)>=0) {
+            checkHostFlag = checkHost(TINGSHU);
+            pre_host = hostEnum.preHost23;
+        }
+
+        if (checkHostFlag) {
+            if (host == hostEnum.prodHost2) {
+                //听书机器，灰度、线上的端口不同
+                url = url.replace("001/", "000/");
+            }
+            url = url.replace(pre_host, host);
+        }
+        
+        return url;
+    }
+
+    //检查host是否与查询地址匹配
+    function checkHost(env){
+        var checkHostFlag=true;
+        if (env==TINGSHU&&ting_list.indexOf(host)<0) {
+            checkHostFlag = false;
+        } else if (env==DUSHU&&du_list.indexOf(host)<0) {
+            checkHostFlag = false;
+        }
+
+        if (!checkHostFlag) {
+            alert("ip环境选择不匹配,默认使用灰度查询");
+            // throw "————请重新选择环境————"; 
+        }
+        return checkHostFlag;
+    }
+
+    // 重置日期
+    function resetDate(){
+        resetNowTime();
+        resetBeginTime();
+    }
+
+    //重置当前结束时间
+    function resetNowTime() {
+        var nowTime = new Date();
+        var nowDate1 = nowTime.Format("yyMMdd"); //yyMMdd
+        var nowDate2 = nowTime.Format("yyyy-MM-dd"); //yyyy-MM-dd
+        var nowDate3 = nowTime.Format("yyyy-MM"); //yyyy-MM
+        $("input.Wdate.yyMMdd[name='stop_date']").val(nowDate1);
+        $("input.Wdate.yyyy-MM-dd[name='stop_date']").val(nowDate2);
+        $("input.Wdate.yyyy-MM[name='yyyyMM']").val(nowDate3);
+    }
+    //重置起始时间
+    function resetBeginTime() {
+        //前一个月
+        var now = new Date();
+        var beginDate = new Date( now.setMonth(now.getMonth() - 1));
+        var beginDate1 = beginDate.Format("yyMMdd");//yyMMdd
+        var beginDate2 = beginDate.Format("yyyy-MM-dd");//yyyy-MM-dd
+        $("input.Wdate.yyMMdd[name='start_date']").val(beginDate1);
+        $("input.Wdate.yyyy-MM-dd[name='start_date']").val(beginDate2);
+    }
+
+    //转换时间
+    function changTime(){
+        var inputTime = $("#changTime").val();
+        if(inputTime.length==0){
+            inputTime = new Date().getTime()+"";
+            $("#changTime").val(inputTime);
+        }
+        //时间戳 转 格式化时间
+        if (inputTime.indexOf('-')<0) {
+            if((inputTime+'').length==10){
+                inputTime = inputTime*1000;
+            }
+            var date = new Date(parseInt(inputTime));
+            var time_result = date.Format("yyyy-MM-dd hh:mm:ss");
+            $("#showTime").html(time_result);
+        } else {
+            //格式化的时间 转 时间戳
+            var date = new Date(inputTime);
+            $("#showTime").html(date.getTime());
+        }
+    }
+
+    //显示/隐藏元素
+    function toggleDom(domId){
+        $("#"+domId).toggle();
+    }
+
+    $(function() {
+        resetDate();
+        changeUserName($("#usr").val().trim());
+        changTime();
+    });
+
+</script>
+</head>
+<html>
+<body>
+    <div style="background:gray; width:60%;" >
+    <font size="5" color="white" >纯html页面，选择环境后，使用浏览器代理访问即可</font>
+    </div>
+    <div>
+        用户名<input type="text" id="usr" name="usr" value="libaisan" oninput="changeUserName(this.value)" onblur="changeUserName(this.value)" />
+        <span id="usr_grey" style="color:red;"></span>
+        <br/>
+        时间戳/格式化时间 转换<input type="text" id="changTime" value="" onblur="changTime()" />
+        <span id="showTime"></span>
+        <br/>
+        <span style="color:red;">选择使用环境</span>
+        <input type="radio" name="host" value="59.151.100.36" checked="checked" onclick="changeEnv()" />灰度
+        <input type="radio" name="host" value="192.168.7.86" onclick="changeEnv()" />正式
+        <input type="radio" name="host" value="59.151.100.64" onclick="changeEnv()" />听书灰度
+        <input type="radio" name="host" value="192.168.7.175" onclick="changeEnv()" />听书正式
+        <br/>
+        <a href="changeName.html">驼峰转换_</a><br/>
+        <span>-----------------------------------------------------------------------------------------------------</span>
+    </div>
+    <div>
+        <span><font size="5" color="green">用户识别</font></span>
+        <span id="queryForUsr_url" hidden>
+            http://59.151.100.36:8080/user/info?user_name=15372657755
+        </span>
+        <br/>
+        用户名/手机号<input type="text" id="queryForUsr_usr" name="usr" value="i46599354" />
+        <input type="button" value="查询" onclick="queryForUsr()" />
+        <div id=""></div>
+        <span>-----------------------------------------------------------------------------------------------------</span>
+    </div>    
+    <div>
+        <span><font size="5" color="green">查询分表num</font></span>
+        <span id="queryForTableNum_url" hidden>
+            http://59.151.100.36:14000/bill/tools/shardingNum?field=i46599354&tableNum=256
+        </span>
+        <br/>
+        分表关键字段<input type="text" id="queryForTableNum_field" name="usr" value="i46599354" />
+        分表总数<input type="text" id="queryForTableNum_tableNum" name="tableNum" value="256" />
+        <input type="button" value="查询" onclick="queryForTableNum()" />
+        <div id=""></div>
+        <span>-----------------------------------------------------------------------------------------------------</span>
+    </div>
+    <div>
+        <span><font size="5" color="green">查询用户资产</font></span>
+        <span id="queryAsset_url" hidden>
+            http://59.151.100.36:16000/sail_uc/asset/queryUsrAssetBookInfos?usr=i130967237&page=1&perPage=20&screenId=14&fid=41&_php_=/huji/zybook3/
+        </span>
+        <br/>
+        用户名<input type="text" id="queryAsset_usr" name="usr" value="i201260639" />
+        <input type="button" value="查询" onclick="queryAsset()" />
+        <div id=""></div>
+        <span>-----------------------------------------------------------------------------------------------------</span>
+    </div>      
+    <div>
+        <span><font size="5" color="green">查询用户听书资产(听书)</font></span>
+        <span id="queryTingAsset_url" hidden>
+            http://59.151.100.64:16001/sail_uc_t/asset/getUsrAssetBookList?fid=52&p5=14&p21=3&usr=i130967237&pageNumber=1&pageSize=10&_php_=/huji/zybook3/
+        </span>
+        <br/>
+        用户名<input type="text" id="queryTingAsset_usr" name="usr" value="i201260639" />
+        <input type="button" value="查询" onclick="queryTingAsset()" />
+        <div id=""></div>
+        <span>-----------------------------------------------------------------------------------------------------</span>
+    </div>   
+    <div>~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</div>
+    <!-- ***********************************账户相关*********************************** -->
+    <div>
+        <span style="background:none; width:60%; height:100%; display:block;overflow: hidden;" onclick="toggleDom('recharge_span')">
+        /////////////////////////////////////
+        <font size="5" color="red" >账户begin</font>
+        /////////////////////////////////////
+        </span>
+        <span id="recharge_span" hidden>
+            <div>
+                <span><font size="5" color="green">用户账户余额</font></span>
+                <span id="queryForAccountInfo_url" hidden>
+                    http://59.151.100.36:18500/account/charging/userAccountV2?usr=i130967237&rgt=7
+                </span>
+                <br/>
+                用户名<input type="text" id="queryForAccountInfo_usr" name="usr" value="i201260639" />
+                <input type="button" value="查询" onclick="queryForAccountInfo()" />
+                <div id=""></div>
+                <span>-----------------------------------------------------------------------------------------------------</span>
+            </div> 
+            <div>
+                <span><font size="5" color="green">阅饼充值</font></span>
+                <span id="recharge_url" hidden>
+                    http://59.151.100.36:14000/bill/recharging/gift_recharging?orderId=&usr=i130967237&rgt=7&price=100&gift_recharging=6000
+                </span>
+                <br/>
+                用户名<input type="text" id="recharge_usr" name="usr" value="i130967237" />
+                金额<input type="text" id="recharge_amount" name="amount" value="10" />
+                <input type="button" value="充值" onclick="recharge()" />
+                <div id=""></div>
+                <span>-----------------------------------------------------------------------------------------------------</span>
+            </div>     
+            <div>
+                <span><font size="5" color="green">阅饼充值(客服维护)</font></span>
+                <span id="maintain_recharging_url" hidden>
+                    http://59.151.100.36:14000/bill/cs/maintain_recharging?orderId=&userShowReason=客服维护&real_amount=0&reason=test&usr=i130967237&gift_amount=100.0&csId=xingjiuzhan
+                </span>
+                <br/>
+                用户名<input type="text" id="maintain_recharging_usr" name="usr" value="i130967237" /> 
+                金额<input type="text" id="maintain_recharging_amount" name="amount" value="10" />
+                <input type="button" value="客服充值" onclick="maintain_recharging()" />
+                <div id=""></div>
+                <span>-----------------------------------------------------------------------------------------------------</span>
+            </div>       
+            <div>
+                <span><font size="5" color="green">阅饼清除</font></span>
+                <span id="directDeduct_url" hidden>
+                    http://59.151.100.36:14000/bill/wipeAss/directDeduct?usr=userbt100&rgt=7&amount=9.49
+                </span>
+                <br/>
+                用户名<input type="text" id="directDeduct_usr" name="usr" value="i130967237" />
+                金额<input type="text" id="directDeduct_amount" name="amount" value="10" />
+                <input type="button" value="清除阅饼" onclick="directDeduct()" />
+                <div id=""></div>
+                <span>-----------------------------------------------------------------------------------------------------</span>
+            </div>   
+            <div>
+                <span><font size="5" color="green">php查询用户充值记录</font></span>
+                <span id="queryForRechargingInfo_url" hidden>
+                    http://59.151.100.36:14000/bill/recharging/get_user_recharging_list?usr=xingapple
+                </span>        
+                <span id="queryForRechargingInfo2_url" hidden>
+                    http://59.151.100.36:14000/bill/recharging/getUsrRechargingList?usr=i283898620
+                </span>
+                <br/>
+                用户名<input type="text" id="queryForRechargingInfo_usr" name="usr" value="i201260639" />
+                <input type="button" value="查询1(hbase)" onclick="queryForRechargingInfo()" />
+                <input type="button" value="查询2(redis)" onclick="queryForRechargingInfo2()" />
+                <div id=""></div>
+                <span>-----------------------------------------------------------------------------------------------------</span>
+            </div>
+            <div>
+                <span><font size="5" color="green">客服查询用户充值记录</font></span>
+                <span id="queryForRechargingInfoCS_url" hidden>
+                    http://59.151.100.36:14000/bill/cs/query_recharging_finish?trade_no=&card_num=&phone=&order_id=&stop_date=2015-01-13&card_psw=&usr=i385645748&start_date=2014-11-14
+                </span>
+                <br/>
+                用户名<input type="text" id="queryForRechargingInfoCS_usr" name="usr" value="i130967237" />
+                start_date(yyyy-MM-dd)<input type="text" id="queryForRechargingInfoCS_start_date" name="start_date" value="2015-05-01" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',maxDate:'%y-%M-%d'})" class="Wdate yyyy-MM-dd"/>
+                stop_date(yyyy-MM-dd)<input type="text" id="queryForRechargingInfoCS_stop_date" name="stop_date" value="2015-05-06" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',maxDate:'%y-%M-%d'})" class="Wdate yyyy-MM-dd"/>
+                <input type="button" value="查询" onclick="queryForRechargingInfoCS()" />
+                <div id=""></div>
+                <span>-----------------------------------------------------------------------------------------------------</span>
+            </div> 
+            <div>
+                <span><font size="5" color="green">查询用户充值状态</font></span>
+                <span id="queryForRechargingStatus_url" hidden>
+                    http://59.151.100.36:14000/bill/recharging/get_recharging_status?usr=qilei001&rgt=7&orderId=201504172167596000SMT&_php_=/zybook3/
+                </span>
+                <br/>
+                用户名<input type="text" id="queryForRechargingStatus_usr" name="usr" value="libaisan" />
+                订单号<input type="text" id="queryForRechargingStatus_orderId" name="orderId" value="201507071949022010" />
+                <input type="button" value="查询" onclick="queryForRechargingStatus()" />
+                <div id=""></div>
+                <span>-----------------------------------------------------------------------------------------------------</span>
+            </div>    
+            <span style="background:none; width:60%; height:100%; display:block;overflow: hidden;">
+            /////////////////////////////////////
+            <font size="5" color="red" >账户end</font>
+            /////////////////////////////////////
+            </span>
+        </span>
+    </div>
+    <div>~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</div>
+    <!-- ***********************************代金券相关*********************************** -->
+    <div>
+        <span style="background:none; width:60%; height:100%; display:block;overflow: hidden;" onclick="toggleDom('coupon_span')">
+        /////////////////////////////////////
+        <font size="5" color="red" >代金券begin</font>
+        /////////////////////////////////////
+        </span>
+        <span id="coupon_span" hidden>
+            <div>
+                <span><font size="5" color="green">代金券余额</font></span>
+                <span id="couponTotal_url" hidden>
+                    http://59.151.100.36:27000/vp/coupon/getUsrCouponTotal?usr=i130967237
+                </span>
+                <br/>
+                用户名<input type="text" id="couponTotal_usr" name="usr" value="i130967237" />
+                <input type="button" value="查询" onclick="couponTotal()" />
+                <div id=""></div>
+                <span>-----------------------------------------------------------------------------------------------------</span>
+            </div>   
+            <div>
+                <span><font size="5" color="green">代金券充值</font></span>
+                <span id="couponRecharge_url" hidden>
+                    http://59.151.100.36:27000/vp/coupon/rechargeCouponGift?orderId=&amount=10&version=770003&usr=i130967237&actId=&imei=IGADBCACDFIHCAF&phoneModel=MI+2S&giftType=41&channel=999941&productId=715
+                </span>
+                <br/>
+                用户名<input type="text" id="couponRecharge_usr" name="usr" value="i130967237" />
+                金额<input type="text" id="couponRecharge_amount" name="amount" value="10" />
+                <input type="button" value="充值" onclick="couponRecharge()" />
+                <div id=""></div>
+                <span>-----------------------------------------------------------------------------------------------------</span>
+            </div> 
+            <div>
+                <span><font size="5" color="green">查询优惠券信息</font></span>
+                <span id="queryForCouponInfo_url" hidden>
+                    http://59.151.100.36:27000/vp/coupon/queryCouponInfos?usr=i201260639&startTime=141201
+                </span>
+                <br/>
+                用户名<input type="text" id="queryForCouponInfo_usr" name="usr" value="i201260639" />
+                起始日期(yyMMdd)<input type="text" id="queryForCouponInfo_startTime" name="start_date" value="150501" onfocus="WdatePicker({dateFmt:'yyMMdd',maxDate:'%y-%M-%d'})" class="Wdate yyMMdd"/>
+                <input type="button" value="查询" onclick="queryForCouponInfo()" />
+                <div id=""></div>
+                <span>-----------------------------------------------------------------------------------------------------</span>
+            </div>        
+            <div>
+                <span><font size="5" color="green">查询代金券详情</font></span>
+                <span id="queryForCouponDetails_url" hidden>
+                    http://59.151.100.36:27000/vp/coupon/queryCouponDetails?couponId=i511373450-150530&pageSize=11&_php_=/huji/zybook3/
+                </span>
+                <br/>
+                用户名<input type="text" id="queryForCouponDetails_usr" name="usr" value="i130967237" />
+                日期(yyMMdd)<input type="text" id="queryForCouponDetails_time" name="start_date" value="150401" onfocus="WdatePicker({dateFmt:'yyMMdd'})" class="Wdate yyMMdd"/>
+                <input type="button" value="查询" onclick="queryForCouponDetails()" />
+                <div id=""></div>
+                <span>-----------------------------------------------------------------------------------------------------</span>
+            </div>       
+            <span style="background:none; width:60%; height:100%; display:block;overflow: hidden;">
+            /////////////////////////////////////
+            <font size="5" color="red" >代金券end</font>
+            /////////////////////////////////////
+            </span>
+        </span>
+    </div>
+    <div>~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</div>
+    <!-- ***********************************VP相关*********************************** -->
+    <div>
+        <span style="background:none; width:60%; height:100%; display:block;overflow: hidden;" onclick="toggleDom('VP_span')">
+        /////////////////////////////////////
+        <font size="5" color="red" >VP begin</font>
+        /////////////////////////////////////
+        </span>
+        <span id="VP_span" hidden>
+            <div>
+                <span><font size="5" color="green">查询用户VP资产</font></span>
+                <span id="queryForVPAssetInfo_url" hidden>
+                    http://59.151.100.36:27000/vp/assets/getUserAllAssets?pageIndex=0&count=20&rgt=7&usr=i130967237
+                </span>
+                <br/>
+                用户名<input type="text" id="queryForVPAssetInfo_usr" name="usr" value="i130967237" />
+                startIndex<input type="text" id="queryForVPAssetInfo_page" name="pageIndex" value="0" />
+                <input type="button" value="查询" onclick="queryForVPAssetInfo()" />
+                <div id=""></div>
+                (limit startIndex, pageIndex+count) count=20<br/>
+                <span>-----------------------------------------------------------------------------------------------------</span>
+            </div>         
+            <div>
+                <span><font size="5" color="green">查询用户VP订单</font></span>
+                <span id="queryForVPOrder_url" hidden>
+                    http://59.151.100.36:27000/vp/order/queryOrder?usr=i450021207&rgt=7&productId=1006&productType=19&_php_=/zybook3/
+                </span>
+                <br/>
+                用户名<input type="text" id="queryForVPOrder_usr" name="usr" value="i130967237" />
+                productId<input type="text" id="queryForVPOrder_productId" name="productId" value="1006" />
+                productType<input type="text" id="queryForVPOrder_productType" name="productType" value="19" />
+                <input type="button" value="查询" onclick="queryForVPOrder()" />
+                <div id=""></div>
+                <span>-----------------------------------------------------------------------------------------------------</span>
+            </div> 
+            <div>
+                <span><font size="5" color="green">清除vp资产</font></span>
+                <span id="deleteAllAssets_url" hidden>
+                    http://59.151.100.36:27000/vp/assets/deleteUserAllAssets?usr=i344468185&rgt=0
+                </span>
+                <br/>
+                用户名<input type="text" id="deleteAllAssets_usr" name="usr" value="i201260639" />
+                <input type="button" value="清除vp资产" onclick="deleteAllAssets()" />
+                <br>删除某个vp资产
+                <br>删除vip：
+                http://59.151.100.36:27000/vp/assets/deleteUserAssets?usr=xingfood&productType=19&assetsSeq=26442<br>
+                <div id=""></div>
+                <span>-----------------------------------------------------------------------------------------------------</span>
+            </div>  
+            <div>
+                <span><font size="5" color="green">查询兑换码</font></span>
+                <span id="queryVoucher_url" hidden>
+                    http://59.151.100.36:27000/vp/voucher/queryVoucher?voucher=LPN8JD
+                </span>
+                <br/>
+                兑换码<input type="text" id="queryVoucher_voucher" name="voucher" value="LPN8JD" />
+                <input type="button" value="查询" onclick="queryVoucher()" />
+                <div id=""></div>
+                <span>-----------------------------------------------------------------------------------------------------</span>
+            </div> 
+            <span style="background:none; width:60%; height:100%; display:block;overflow: hidden;">
+            /////////////////////////////////////
+            <font size="5" color="red" >VP end</font>
+            /////////////////////////////////////
+            </span>
+        </span>
+    </div>
+    <div>~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</div>
+    <!-- ***********************************vip相关*********************************** -->
+    <div>
+        <span style="background:none; width:60%; height:100%; display:block;overflow: hidden;" onclick="toggleDom('vip_span')">
+        /////////////////////////////////////
+        <font size="5" color="red" >VIP begin</font>
+        /////////////////////////////////////
+        </span>
+        <span id="vip_span" hidden>    
+            <div>
+                <span><font size="5" color="green">查询VIP</font></span>
+                <span id="queryVIP_url" hidden>
+                    http://59.151.100.36:27000/vp/vip/query?usr=i403327236&productId=&productType=
+                </span>
+                <br/>
+                用户名<input type="text" id="queryVIP_usr" name="usr" value="i201260639" />
+                <input type="button" value="查询VIP" onclick="queryVIP('vip')" />
+                <input type="button" value="查询包月" onclick="queryVIP('monthly')" />
+                <div id=""></div>
+                <span>-----------------------------------------------------------------------------------------------------</span>
+            </div>     
+            <div>
+                <span><font size="5" color="green">计算VIP可优惠购买时间</font></span>
+                <span id="calcSpecialBuyTime_url" hidden>
+                    http://59.151.100.36:27000/vp/vip/calcSpecialBuyTime?usr=i344448258&productType=10&productId=300
+                </span>
+                <br/>
+                用户名<input type="text" id="calcSpecialBuyTime_usr" name="usr" value="i201260639" />
+                <input type="button" value="查询VIP优惠购买时间" onclick="calcSpecialBuyTime()" />
+                <div id=""></div>
+                <span>-----------------------------------------------------------------------------------------------------</span>
+            </div>      
+            <div>
+                <span><font size="5" color="green">购买VIP</font></span>
+                <span id="buyVip_url" hidden>
+                    http://59.151.100.36:27000/vp/order/buyProduct?usr=i130967237&rgt=7&productId=100662&subId=99&productType=19&schemeId=41&phoneType=GN706L&clientVersion=750003&channelId=109301&p3=750003&p19=&reserve2=1006&orderFrom=VIP&_php_=/zybook3
+                </span>
+                <br/>
+                用户名<input type="text" id="buyVip_usr" name="usr" value="i201260639" />
+                <input type="button" value="购买VIP" onclick="buyVip()" />
+                <br>赠送vip：
+                <br>灰度：http://192.168.7.86:27000/vp/order/giftVip?usr=libaisan&rgt=7&productId=1006&subId=140&productType=19&schemeId=41&phoneType=0&clientVersion=0&channelId=0&p3=750003&p19=&reserve2=1006&orderFrom=VIP&_php_=/zybook3
+                <br>灰度：http://192.168.7.36:27000/vp/order/giftVip?usr=libaisan&rgt=7&productId=100662&subId=146&productType=19&schemeId=41&phoneType=0&clientVersion=0&channelId=0&p3=750003&p19=&reserve2=100662&orderFrom=VIP&_php_=/zybook3
+                <br>
+                <div id=""></div>
+                <span>-----------------------------------------------------------------------------------------------------</span>
+            </div>       
+            <div style="display:none;">
+                <span><font size="5" color="green">维护VIP5分钟购买失败订单</font></span>
+                <span id="maintainBuyVip_url" hidden>
+                    http://59.151.100.36:27000/vp/vip/maintainBuyVip?usr=userbt100
+                </span>
+                <br/>
+                用户名<input type="text" id="maintainBuyVip_usr" name="usr" value="i201260639" />
+                <input type="button" value="维护VIP5分钟购买失败订单" onclick="maintainBuyVip()" />
+                <div id=""></div>
+                <span>-----------------------------------------------------------------------------------------------------</span>
+            </div>    
+            <div style="display:none;">
+                <span><font size="5" color="green">VIP订购错误订单</font></span>
+                <span id="getVipErrorOrder_url" hidden>
+                    http://59.151.100.36:27000/vp/vip/getVipErrorOrder?usr=userbt100
+                </span>
+                <br/>
+                用户名<input type="text" id="getVipErrorOrder_usr" name="usr" value="i201260639" />
+                <input type="button" value="查询VIP订购错误订单" onclick="getVipErrorOrder()" />
+                <div id=""></div>
+                <span>-----------------------------------------------------------------------------------------------------</span>
+            </div>          
+            <div style="display:none;">
+                <span><font size="5" color="green">重新购买VIP订购错误订单</font></span>
+                <span id="buyVipByOrder_url" hidden>
+                    http://59.151.100.36:27000/vp/vip/buyVipByOrder?orderId=99915012021412089
+                </span>
+                <br/>
+                订单号<input type="text" id="buyVipByOrder_orderId" name="orderId" value="99915012021412089" />
+                <input type="button" value="重新购买VIP订购错误订单" onclick="buyVipByOrder()" />
+                <div id=""></div>
+                <span>-----------------------------------------------------------------------------------------------------</span>
+            </div>      
+            <div>
+                <span><font size="5" color="green">刷新vip信息</font></span>
+                <span id="refreshVip_url" hidden>
+                    http://59.151.100.36:27000/vp/vip/flashVipCache?flush=true&usr=i570157871
+                </span>
+                <br/>
+                用户名<input type="text" id="refreshVip_usr" name="usr" value="i201260639" />
+                <input type="button" value="刷新vip信息" onclick="refreshVip()" />
+                <br>重新从数据库读取并计算vip信息
+                <br>
+                <div id=""></div>
+                <span>-----------------------------------------------------------------------------------------------------</span>
+            </div>        
+            <div>
+                <span><font size="5" color="green">批量修复vip数据(从数据库读取数据)</font></span>
+                <span id="vipRepair_url" hidden>
+                    http://59.151.100.36:27000/vp/vip/vipRepair?time=2015-06-17%2010&flush=true
+                </span>
+                <br/>
+                起始时间(yyyy-MM-dd)<input type="text" id="vipRepair_time" name="time" value="2015-06-17" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',maxDate:'%y-%M-%d'})" class="Wdate yyyy-MM-dd"/>
+                <input type="button" value="修复vip数据" onclick="vipRepair()" />
+                <br>扫描数据库256张表，获取某个时间段购买vip的用户，重新从数据库刷新vip信息（memcached缓存问题使用）
+                <br>
+                <div id=""></div>
+                <span>-----------------------------------------------------------------------------------------------------</span>
+            </div>        
+            <span style="background:none; width:60%; height:100%; display:block;overflow: hidden;">
+            /////////////////////////////////////
+            <font size="5" color="red" >VIP end</font>
+            /////////////////////////////////////
+            </span>
+        </span>
+    </div>
+    <div>~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</div>
+    <!-- ***********************************交易流水相关*********************************** -->
+    <div>
+        <span style="background:none; width:60%; height:100%; display:block;overflow: hidden;" onclick="toggleDom('tradeSeq_span')">
+        /////////////////////////////////////
+        <font size="5" color="red" >交易流水begin</font>
+        /////////////////////////////////////
+        </span>
+        <span id="tradeSeq_span" hidden>     
+            <div>
+                <span><font size="5" color="green">查询账户交易流水</font></span>
+                <span id="queryForTradeSeq_url" hidden>
+                    http://59.151.100.36:14000/bill/recharging/queryTradeSeqList?usr=i437599137&yyyyMM=&orderId=&start_date=2015-01-01&stop_date=2015-02-02&tradeType=
+                </span>
+                <br/>
+                用户名<input type="text" id="queryForTradeSeq_usr" name="usr" value="i130967237" />
+                yyyyMM<input type="text" id="queryForTradeSeq_yyyyMM" name="yyyyMM" value="2015-05" onfocus="WdatePicker({dateFmt:'yyyy-MM',maxDate:'%y-%M'})" class="Wdate yyyy-MM" />
+                start_date(yyyy-MM-dd)<input type="text" id="queryForTradeSeq_start_date" name="start_date" value="2015-05-01" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',maxDate:'%y-%M-%d'})" class="Wdate yyyy-MM-dd"/>
+                stop_date(yyyy-MM-dd)<input type="text" id="queryForTradeSeq_stop_date" name="stop_date" value="2015-05-13" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',maxDate:'%y-%M-%d'})" class="Wdate yyyy-MM-dd"/>
+                <input type="button" value="查询" onclick="queryForTradeSeq()" />
+                <br>yyyyMM参数和start_date/stop_date参数相比，yyyyMM优先
+                <br>
+                <div id=""></div>
+                <span>-----------------------------------------------------------------------------------------------------</span>
+            </div>   
+            <div>
+                <span><font size="5" color="green">查询代金券交易流水</font></span>
+                <span id="queryForCouponTradeSeq_url" hidden>
+                    http://59.151.100.36:27000/vp/coupon/queryTradeSeqList?usr=i437599137&yyyyMM=&orderId=&start_date=2015-01-01&stop_date=2015-02-02&tradeType=
+                </span>
+                <br/>
+                用户名<input type="text" id="queryForCouponTradeSeq_usr" name="usr" value="i130967237" />
+                yyyyMM<input type="text" id="queryForCouponTradeSeq_yyyyMM" name="yyyyMM" value="2015-07" onfocus="WdatePicker({dateFmt:'yyyy-MM',maxDate:'%y-%M'})" class="Wdate yyyy-MM" />
+                start_date(yyyy-MM-dd)<input type="text" id="queryForCouponTradeSeq_start_date" name="start_date" value="2015-05-01" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',maxDate:'%y-%M-%d'})" class="Wdate yyyy-MM-dd"/>
+                stop_date(yyyy-MM-dd)<input type="text" id="queryForCouponTradeSeq_stop_date" name="stop_date" value="2015-05-13" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',maxDate:'%y-%M-%d'})" class="Wdate yyyy-MM-dd"/>
+                <input type="button" value="查询" onclick="queryForCouponTradeSeq()" />
+                <br>yyyyMM参数和start_date/stop_date参数相比，yyyyMM优先
+                <br>
+                <div id=""></div>
+                <span>-----------------------------------------------------------------------------------------------------</span>
+            </div>   
+            <div>
+                <span><font size="5" color="green">查询兑换码交易流水</font></span>
+                <span id="queryForVoucherSeq_url" hidden>
+                    http://59.151.100.36:27000/vp/voucher/queryTradeSeqList?usr=&voucher=LPN8JD&yyyyMM=&start_date=2015-07-01&stop_date=2015-07-15
+                </span>
+                <br/>
+                用户名<input type="text" id="queryForVoucherSeq_usr" name="usr" value="i130967237" />
+                兑换码<input type="text" id="queryForVoucherSeq_voucher" name="voucher" value="LPN8JD" />
+                yyyyMM<input type="text" id="queryForVoucherSeq_yyyyMM" name="yyyyMM" value="2015-07" onfocus="WdatePicker({dateFmt:'yyyy-MM',maxDate:'%y-%M'})" class="Wdate yyyy-MM" />
+                start_date(yyyy-MM-dd)<input type="text" id="queryForVoucherSeq_start_date" name="start_date" value="2015-05-01" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',maxDate:'%y-%M-%d'})" class="Wdate yyyy-MM-dd"/>
+                stop_date(yyyy-MM-dd)<input type="text" id="queryForVoucherSeq_stop_date" name="stop_date" value="2015-05-13" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',maxDate:'%y-%M-%d'})" class="Wdate yyyy-MM-dd"/>
+                <input type="button" value="查询" onclick="queryForVoucherSeq()" />
+                <br>用户名、兑换码必填一个
+                <br>yyyyMM参数和start_date/stop_date参数相比，yyyyMM优先
+                <br>
+                <div id=""></div>
+                <span>-----------------------------------------------------------------------------------------------------</span>
+            </div>   
+            <span style="background:none; width:60%; height:100%; display:block;overflow: hidden;">
+            /////////////////////////////////////
+            <font size="5" color="red" >交易流水end</font>
+            /////////////////////////////////////
+            </span>
+        </span>
+    </div>       
+    <div>~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</div>
+    <!-- ***********************************商城订单相关*********************************** -->
+    <div>
+        <span style="background:none; width:60%; height:100%; display:block;overflow: hidden;" onclick="toggleDom('pbookOrder_span')">
+        /////////////////////////////////////
+        <font size="5" color="red" >商城订单begin</font>
+        /////////////////////////////////////
+        </span>
+        <span id="pbookOrder_span" hidden>  
+            <div>
+                <span><font size="5" color="green">客服查询订单列表(听书)</font></span>
+                <span id="queryPbookOrderList_url" hidden>
+                    http://59.151.100.64:32001/pbook/cs/getOrderList?usr=libaisan&orderStatus=1&orderType=1&startTime=2015-05-01&stopTime=2015-05-20
+                </span>
+                <br/>
+                用户名<input type="text" id="queryPbookOrderList_usr" name="usr" value="i130967237" />
+                订单状态<input type="text" id="queryPbookOrderList_orderStatus" name="orderStatus" value="1" />
+                订单类型<input type="text" id="queryPbookOrderList_orderType" name="orderType" value="1" />
+                startTime(yyyy-MM-dd)<input type="text" id="queryPbookOrderList_startTime" name="start_date" value="2015-05-01" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',maxDate:'%y-%M-%d'})" class="Wdate yyyy-MM-dd"/>
+                stopTime(yyyy-MM-dd)<input type="text" id="queryPbookOrderList_stopTime" name="stop_date" value="2015-05-13" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',maxDate:'%y-%M-%d'})" class="Wdate yyyy-MM-dd"/>
+                <input type="button" value="查询" onclick="queryPbookOrderList()" />
+                <br>用户名不填，查询所有用户
+                <br>orderStatus不填，查询所有状态的订单
+                <br>
+                    orderStatus:1待付款, 2已付款, 3缺货, 4部分发货, 5已发货, 6交易成功, 7等待退款中, 8交易超时, 9交易关闭, 10交易取消", 11预订", -1订单删除", 0未知
+                <br>
+                    ordreType:1文轩纸质书订单, 2电纸书订单, 3博库纸质书订单
+                <br>
+                <div id=""></div>
+                <span>-----------------------------------------------------------------------------------------------------</span>
+            </div>  
+            <div>
+                <span><font size="5" color="green">客服查询订单详情(听书)</font></span>
+                <span id="queryPbookOrderDeatil_url" hidden>
+                    http://59.151.100.64:32001/pbook/cs/getOrderDetail?orderId=IR143329785059787492
+                </span>
+                <br/>
+                订单号<input type="text" id="queryPbookOrderDeatil_orderId" name="orderId" value="IR143329785059787492" />
+                <input type="button" value="查询" onclick="queryPbookOrderDeatil()" />
+                <div id=""></div>
+                <span>-----------------------------------------------------------------------------------------------------</span>
+            </div>
+            <div>
+                <span><font size="5" color="green">查询物流（文轩）(听书)</font></span>
+                <span id="queryLogisticsWenxuan_url" hidden>
+                    http://59.151.100.64:32001/pbook/order/queryLogistics?deliveryCode=WX150090642&companyId=561
+                </span>
+                <br/>
+                物流公司id<input type="text" id="queryLogisticsWenxuan_companyId" name="companyId" value="561" />
+                物流单号<input type="text" id="queryLogisticsWenxuan_deliveryCode" name="deliveryCode" value="WX150090642" />
+                <input type="button" value="查询" onclick="queryLogisticsWenxuan()" />
+                <div id=""></div>
+                <span>-----------------------------------------------------------------------------------------------------</span>
+            </div>
+            <div>
+                <span><font size="5" color="green">查询物流（快递100）(听书)</font></span>
+                <span id="queryLogisticsKuaidi100_url" hidden>
+                    http://59.151.100.64:32001/pbook/order/kuaidi100Logistics?deliveryCode=305980661496&companyId=shunfeng
+                </span>
+                <br/>
+                物流公司id<input type="text" id="queryLogisticsKuaidi100_companyId" name="companyId" value="shunfeng" />
+                物流单号<input type="text" id="queryLogisticsKuaidi100_deliveryCode" name="deliveryCode" value="305980661496" />
+                <input type="button" value="查询" onclick="queryLogisticsKuaidi100()" />
+                <div id=""></div>
+                <span>-----------------------------------------------------------------------------------------------------</span>
+            </div>
+            <span style="background:none; width:60%; height:100%; display:block;overflow: hidden;">
+            /////////////////////////////////////
+            <font size="5" color="red" >商城订单end</font>
+            /////////////////////////////////////
+            </span>
+        </span>
+    </div>
+    <div>~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</div>
+
+
+<script type="text/javascript">
+
+    //用户识别
+    function queryForUsr(){
+        var funcName = getFnName(arguments.callee);
+        var url = $("#"+funcName+"_url").text().trim();
+        var user_name = $("#"+funcName+"_usr").val().trim();
+        var data = {user_name:user_name};
+        openwin(replaceURLParam(url,data));
+    }  
+    //查询分表num
+    function queryForTableNum(){
+        var funcName = getFnName(arguments.callee);
+        var url = $("#"+funcName+"_url").text().trim();
+        var field = $("#"+funcName+"_field").val().trim();
+        var tableNum = $("#"+funcName+"_tableNum").val().trim();
+        var data = {field:field,tableNum:tableNum};
+        replaceUrlAndOpen(url,data);
+    }   
+    //阅饼充值
+    function recharge(){
+        if(confirm("确认充值")){
+            var funcName = getFnName(arguments.callee);
+            var url = $("#"+funcName+"_url").text().trim();
+            var usr = $("#"+funcName+"_usr").val().trim();
+            var price = $("#"+funcName+"_amount").val().trim();
+            var data = {usr:usr,price:price};
+            replaceUrlAndOpen(url,data);
+        }
+    }    
+    //阅饼充值(客服维护)
+    function maintain_recharging(){
+        if(confirm("确认充值")){
+            var funcName = getFnName(arguments.callee);
+            var url = $("#"+funcName+"_url").text().trim();
+            var usr = $("#"+funcName+"_usr").val().trim();
+            var gift_amount = $("#"+funcName+"_amount").val().trim();
+            var data = {usr:usr,gift_amount:gift_amount};
+            replaceUrlAndOpen(url,data);
+        }
+    }        
+    //代金券余额
+    function couponTotal(){
+        var funcName = getFnName(arguments.callee);
+        var url = $("#"+funcName+"_url").text().trim();
+        var usr = $("#"+funcName+"_usr").val().trim();
+        var data = {usr:usr};
+        replaceUrlAndOpen(url,data);
+    }    
+    //查询优惠券信息
+    function queryForCouponInfo(){
+        var funcName = getFnName(arguments.callee);
+        var url = $("#"+funcName+"_url").text().trim();
+        var usr = $("#"+funcName+"_usr").val().trim();
+        var startTime = $("#"+funcName+"_startTime").val().trim();
+        var data = {usr:usr,startTime:startTime};
+        replaceUrlAndOpen(url,data);
+    }  
+    //代金券详情
+    function queryForCouponDetails(){
+        var funcName = getFnName(arguments.callee);
+        var url = $("#"+funcName+"_url").text().trim();
+        var usr = $("#"+funcName+"_usr").val().trim();
+        var couponTime = $("#"+funcName+"_time").val().trim();
+        var data = {couponId:usr+"-"+couponTime};
+        replaceUrlAndOpen(url,data);
+    }      
+    //代金券充值
+    function couponRecharge(){
+        if(confirm("确认充值")){
+            var funcName = getFnName(arguments.callee);
+            var url = $("#"+funcName+"_url").text().trim();
+            var usr = $("#"+funcName+"_usr").val().trim();
+            var amount = $("#"+funcName+"_amount").val().trim();
+            var data = {usr:usr,amount:amount};
+            replaceUrlAndOpen(url,data);
+        }
+    }      
+    //清除阅饼
+    function directDeduct(){
+        if(confirm("确认清除")){
+            var funcName = getFnName(arguments.callee);
+            var url = $("#"+funcName+"_url").text().trim();
+            var usr = $("#"+funcName+"_usr").val().trim();
+            var amount = $("#"+funcName+"_amount").val().trim();
+            var data = {usr:usr,amount:amount};
+            replaceUrlAndOpen(url,data);
+        }
+    }    
+    //查询账户信息
+    function queryForAccountInfo(){
+        var funcName = getFnName(arguments.callee);
+        var url = $("#"+funcName+"_url").text().trim();
+        var usr = $("#"+funcName+"_usr").val().trim();
+        var data = {usr:usr};
+        replaceUrlAndOpen(url,data);
+    }       
+    //查询用户资产
+    function queryAsset(){
+        var funcName = getFnName(arguments.callee);
+        var url = $("#"+funcName+"_url").text().trim();
+        var usr = $("#"+funcName+"_usr").val().trim();
+        var data = {usr:usr};
+        replaceUrlAndOpen(url,data);
+    }      
+    //查询用户听书资产
+    function queryTingAsset(){
+        var funcName = getFnName(arguments.callee);
+        var url = $("#"+funcName+"_url").text().trim();
+        var usr = $("#"+funcName+"_usr").val().trim();
+        var data = {usr:usr};
+        replaceUrlAndOpen(url,data);
+    }    
+    //查询hbase充值记录信息
+    function queryForRechargingInfo(){
+        var funcName = getFnName(arguments.callee);
+        var url = $("#"+funcName+"_url").text().trim();
+        var usr = $("#"+funcName+"_usr").val().trim();
+        var data = {usr:usr};
+        replaceUrlAndOpen(url,data);
+    }   
+    //查询redis充值记录信息
+    function queryForRechargingInfo2(){
+        var funcName = getFnName(arguments.callee);
+        var url = $("#"+funcName+"_url").text().trim();
+        var usr = $("#queryForRechargingInfo_usr").val().trim();
+        var data = {usr:usr};
+        replaceUrlAndOpen(url,data);
+    }  
+    //查询用户VP资产
+    function queryForVPAssetInfo(){
+        var funcName = getFnName(arguments.callee);
+        var url = $("#"+funcName+"_url").text().trim();
+        var usr = $("#"+funcName+"_usr").val().trim();
+        var pageIndex = $("#"+funcName+"_page").val().trim();
+        var data = {usr:usr,pageIndex:pageIndex};
+        replaceUrlAndOpen(url,data);
+    }     
+    //查询用户VP订单
+    function queryForVPOrder(){
+        var funcName = getFnName(arguments.callee);
+        var url = $("#"+funcName+"_url").text().trim();
+        var usr = $("#"+funcName+"_usr").val().trim();
+        var productId = $("#"+funcName+"_productId").val().trim();
+        var productType = $("#"+funcName+"_productType").val().trim();
+        var data = {usr:usr,productId:productId,productType:productType};
+        replaceUrlAndOpen(url,data);
+    }     
+    //客服查询用户充值记录
+    function queryForRechargingInfoCS(){
+        var funcName = getFnName(arguments.callee);
+        var url = $("#"+funcName+"_url").text().trim();
+        var usr = $("#"+funcName+"_usr").val().trim();
+        var start_date = $("#"+funcName+"_start_date").val().trim();
+        var stop_date = $("#"+funcName+"_stop_date").val().trim();
+        var data = {usr:usr,start_date:start_date,stop_date:stop_date};
+        replaceUrlAndOpen(url,data);
+    }       
+    //查询用户充值状态
+    function queryForRechargingStatus(){
+        var funcName = getFnName(arguments.callee);
+        var url = $("#"+funcName+"_url").text().trim();
+        var usr = $("#"+funcName+"_usr").val().trim();
+        var orderId = $("#"+funcName+"_orderId").val().trim();
+        var data = {usr:usr,orderId:orderId};
+        replaceUrlAndOpen(url,data);
+    }   
+    //查询VIP
+    function queryVIP(type){
+        var funcName = getFnName(arguments.callee);
+        var url = $("#"+funcName+"_url").text().trim();
+        var usr = $("#"+funcName+"_usr").val().trim();
+        var data = {};
+        if (type=="monthly") {
+            //替换url为 http://59.151.100.36:27000/vp/monthly/query?usr=i130967237&productId=300&productType=10
+            url = url.replace("vip","monthly");
+            data = {usr:usr,productId:300,productType:10};
+        }else{
+            data = {usr:usr};
+        }
+        replaceUrlAndOpen(url,data);
+    }       
+    //计算VIP可优惠购买天数
+    function calcSpecialBuyTime(){
+        var funcName = getFnName(arguments.callee);
+        var url = $("#"+funcName+"_url").text().trim();
+        var usr = $("#"+funcName+"_usr").val().trim();
+        var data = {usr:usr};
+        replaceUrlAndOpen(url,data);
+    }    
+    //购买VIP
+    function buyVip(){
+        if(confirm("确认购买VIP")){
+            var funcName = getFnName(arguments.callee);
+            var url = $("#"+funcName+"_url").text().trim();
+            var usr = $("#"+funcName+"_usr").val().trim();
+            var data = {usr:usr};
+            replaceUrlAndOpen(url,data);
+        }
+    }      
+    //维护VIP5分钟购买失败订单
+    function maintainBuyVip(){
+        var funcName = getFnName(arguments.callee);
+        var url = $("#"+funcName+"_url").text().trim();
+        var usr = $("#"+funcName+"_usr").val().trim();
+        var data = {usr:usr};
+        replaceUrlAndOpen(url,data);
+    }    
+    //VIP订购错误订单
+    function getVipErrorOrder(){
+        var funcName = getFnName(arguments.callee);
+        var url = $("#"+funcName+"_url").text().trim();
+        var usr = $("#"+funcName+"_usr").val().trim();
+        var data = {usr:usr};
+        replaceUrlAndOpen(url,data);
+    }     
+    //重新购买VIP订购错误订单
+    function buyVipByOrder(){
+        if(confirm("确认重新购买")){
+            var funcName = getFnName(arguments.callee);
+            var url = $("#"+funcName+"_url").text().trim();
+            var orderId = $("#"+funcName+"_orderId").val().trim();
+            var data = {orderId:orderId};
+            replaceUrlAndOpen(url,data);
+        }
+    }     
+    //刷新用户vip信息
+    function refreshVip(){
+        if(confirm("确认刷新vip")){
+            var funcName = getFnName(arguments.callee);
+            var url = $("#"+funcName+"_url").text().trim();
+            var usr = $("#"+funcName+"_usr").val().trim();
+            var data = {usr:usr};
+            replaceUrlAndOpen(url,data);
+        }
+    }     
+    //修复vip数据
+    function vipRepair(){
+        if(confirm("确认批量修复vip数据")){
+            var funcName = getFnName(arguments.callee);
+            var url = $("#"+funcName+"_url").text().trim();
+            var time = $("#"+funcName+"_time").val().trim();
+            var data = {time:time};
+            replaceUrlAndOpen(url,data);
+        }
+    }     
+    //清除vp资产
+    function deleteAllAssets(){
+        if(confirm("确认清除")){
+            var funcName = getFnName(arguments.callee);
+            var url = $("#"+funcName+"_url").text().trim();
+            var usr = $("#"+funcName+"_usr").val().trim();
+            var data = {usr:usr};
+            replaceUrlAndOpen(url,data);
+        }
+    }
+    //查询兑换码
+    function queryVoucher(){
+        var funcName = getFnName(arguments.callee);
+        var url = $("#"+funcName+"_url").text().trim();
+        var voucher = $("#"+funcName+"_voucher").val().trim();
+        var data = {voucher:voucher};
+        replaceUrlAndOpen(url,data);
+    }
+    //查询账户交易流水
+    function queryForTradeSeq(){
+        var funcName = getFnName(arguments.callee);
+        var url = $("#"+funcName+"_url").text().trim();
+        var usr = $("#"+funcName+"_usr").val().trim();
+        var yyyyMM = $("#"+funcName+"_yyyyMM").val().trim();
+        var start_date = $("#"+funcName+"_start_date").val().trim();
+        var stop_date = $("#"+funcName+"_stop_date").val().trim();
+        var data = {usr:usr,start_date:start_date,stop_date:stop_date,yyyyMM:yyyyMM};
+        replaceUrlAndOpen(url,data);
+    }     
+    //查询代金券交易流水
+    function queryForCouponTradeSeq(){
+        var funcName = getFnName(arguments.callee);
+        var url = $("#"+funcName+"_url").text().trim();
+        var usr = $("#"+funcName+"_usr").val().trim();
+        var yyyyMM = $("#"+funcName+"_yyyyMM").val().trim();
+        var start_date = $("#"+funcName+"_start_date").val().trim();
+        var stop_date = $("#"+funcName+"_stop_date").val().trim();
+        var data = {usr:usr,start_date:start_date,stop_date:stop_date,yyyyMM:yyyyMM};
+        replaceUrlAndOpen(url,data);
+    }      
+    //查询代金券交易流水
+    function queryForVoucherSeq(){
+        var funcName = getFnName(arguments.callee);
+        var url = $("#"+funcName+"_url").text().trim();
+        var usr = $("#"+funcName+"_usr").val().trim();
+        var voucher = $("#"+funcName+"_voucher").val().trim();
+        var yyyyMM = $("#"+funcName+"_yyyyMM").val().trim();
+        var start_date = $("#"+funcName+"_start_date").val().trim();
+        var stop_date = $("#"+funcName+"_stop_date").val().trim();
+        var data = {usr:usr,voucher:voucher,start_date:start_date,stop_date:stop_date,yyyyMM:yyyyMM};
+        replaceUrlAndOpen(url,data);
+    }     
+    //客服查询商城订单列表
+    function queryPbookOrderList(){
+        var funcName = getFnName(arguments.callee);
+        var url = $("#"+funcName+"_url").text().trim();
+        var usr = $("#"+funcName+"_usr").val().trim();
+        var orderStatus = $("#"+funcName+"_orderStatus").val().trim();
+        var orderType = $("#"+funcName+"_orderType").val().trim();
+        var startTime = $("#"+funcName+"_startTime").val().trim();
+        var stopTime = $("#"+funcName+"_stopTime").val().trim();
+        var data = {usr:usr,orderStatus:orderStatus,orderType:orderType,startTime:startTime,stopTime:stopTime};
+        replaceUrlAndOpen(url,data);
+    }     
+    //客服查询商城订单详情
+    function queryPbookOrderDeatil(){
+        var funcName = getFnName(arguments.callee);
+        var url = $("#"+funcName+"_url").text().trim();
+        var orderId = $("#"+funcName+"_orderId").val().trim();
+        var data = {orderId:orderId};
+        replaceUrlAndOpen(url,data);
+    }     
+    //查询物流（文轩）
+    function queryLogisticsWenxuan(){
+        var funcName = getFnName(arguments.callee);
+        var url = $("#"+funcName+"_url").text().trim();
+        var companyId = $("#"+funcName+"_companyId").val().trim();
+        var deliveryCode = $("#"+funcName+"_deliveryCode").val().trim();
+        var data = {companyId:companyId,deliveryCode:deliveryCode};
+        replaceUrlAndOpen(url,data);
+    }    
+    //查询物流（快递100）
+    function queryLogisticsKuaidi100(){
+        var funcName = getFnName(arguments.callee);
+        var url = $("#"+funcName+"_url").text().trim();
+        var companyId = $("#"+funcName+"_companyId").val().trim();
+        var deliveryCode = $("#"+funcName+"_deliveryCode").val().trim();
+        var data = {companyId:companyId,deliveryCode:deliveryCode};
+        replaceUrlAndOpen(url,data);
+    }     
+
+
+</script>
+</body>
+</html>
