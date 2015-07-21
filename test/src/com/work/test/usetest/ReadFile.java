@@ -17,7 +17,7 @@ public class ReadFile {
 
 	}
 
-	private static void readFile(String filePaht) {
+	public static void readFile(String filePaht) {
 		File file = new File(filePaht);
         BufferedReader reader = null;
         try {
@@ -44,7 +44,7 @@ public class ReadFile {
         }
 	}
 
-	private static String getRealPath(String path) {
+	public static String getRealPath(String path) {
 		String basePath = new ReadFile().getClass().getClassLoader()
 				.getResource("").getPath();
 		String pathString = basePath + path;
