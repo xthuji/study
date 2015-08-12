@@ -7,11 +7,11 @@
 
 	<dependencies>
 	    <!-- 项目 依赖client_test -->
-		<dependency>  
+<!-- 		<dependency>  
 		    <groupId>client_test</groupId>  
 		    <artifactId>com.client</artifactId>
 		    <version>0.0.1-SNAPSHOT</version>  
-		</dependency>  
+		</dependency>   -->
         <!-- 项目 依赖client_test -->  
           
 		<dependency>
