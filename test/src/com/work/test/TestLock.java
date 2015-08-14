@@ -2,8 +2,6 @@ package com.work.test;
 
 import java.io.IOException;
 
-import javax.mail.Flags.Flag;
-
 import net.rubyeye.xmemcached.MemcachedClient;
 import net.rubyeye.xmemcached.MemcachedClientBuilder;
 import net.rubyeye.xmemcached.XMemcachedClientBuilder;
