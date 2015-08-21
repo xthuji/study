@@ -1,13 +1,9 @@
 package com.work.test.excel;
- 
-import java.io.File;
+
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.junit.Test;
- 
 /**
  * Excel工具抽象类
  * 
@@ -21,7 +17,7 @@ public abstract class ExcelHelper {
      * 对象序列化版本号名称
      */
     public static final String UID = "serialVersionUID";
- 
+
     /**
      * 将指定excel文件中的数据转换成数据列表
      * 
@@ -34,8 +30,7 @@ public abstract class ExcelHelper {
      * @return 返回转换后的数据列表
      * @throws Exception
      */
-    public <T> List<T> readExcel(Class<T> clazz, int sheetNo, boolean hasTitle)
-            throws Exception {
+    public <T> List<T> readExcel(Class<T> clazz, int sheetNo, boolean hasTitle) throws Exception {
         Field[] fields = clazz.getDeclaredFields();
         String[] fieldNames = new String[fields.length];
         for (int i = 0; i < fields.length; i++) {
@@ -44,7 +39,7 @@ public abstract class ExcelHelper {
         }
         return readExcel(clazz, fieldNames, sheetNo, hasTitle);
     }
- 
+
     /**
      * 将指定excel文件中的数据转换成数据列表
      * 
@@ -57,11 +52,10 @@ public abstract class ExcelHelper {
      * @return 返回转换后的数据列表
      * @throws Exception
      */
-    public <T> List<T> readExcel(Class<T> clazz, String[] fieldNames,
-            boolean hasTitle) throws Exception {
+    public <T> List<T> readExcel(Class<T> clazz, String[] fieldNames, boolean hasTitle) throws Exception {
         return readExcel(clazz, fieldNames, 0, hasTitle);
     }
- 
+
     /**
      * 抽象方法：将指定excel文件中的数据转换成数据列表，由子类实现
      * 
@@ -76,9 +70,9 @@ public abstract class ExcelHelper {
      * @return 返回转换后的数据列表
      * @throws Exception
      */
-    public abstract <T> List<T> readExcel(Class<T> clazz, String[] fieldNames,
-            int sheetNo, boolean hasTitle) throws Exception;
-    
+    public abstract <T> List<T> readExcel(Class<T> clazz, String[] fieldNames, int sheetNo, boolean hasTitle)
+        throws Exception;
+
     /**
      * 抽象方法：读取指定excel文件中的title
      * 
@@ -90,7 +84,7 @@ public abstract class ExcelHelper {
      * @throws Exception
      */
     public abstract List<String> readExcelTitle(int sheetNo) throws Exception;
- 
+
     /**
      * 写入数据到指定excel文件中
      * 
@@ -100,8 +94,7 @@ public abstract class ExcelHelper {
      *            数据列表
      * @throws Exception
      */
-    public <T> void writeExcel(Class<T> clazz, List<T> dataModels)
-            throws Exception {
+    public <T> void writeExcel(Class<T> clazz, List<T> dataModels) throws Exception {
         Field[] fields = clazz.getDeclaredFields();
         String[] fieldNames = new String[fields.length];
         for (int i = 0; i < fields.length; i++) {
@@ -110,7 +103,7 @@ public abstract class ExcelHelper {
         }
         writeExcel(clazz, dataModels, fieldNames, fieldNames);
     }
- 
+
     /**
      * 写入数据到指定excel文件中
      * 
@@ -122,11 +115,10 @@ public abstract class ExcelHelper {
      *            属性列表
      * @throws Exception
      */
-    public <T> void writeExcel(Class<T> clazz, List<T> dataModels,
-            String[] fieldNames) throws Exception {
+    public <T> void writeExcel(Class<T> clazz, List<T> dataModels, String[] fieldNames) throws Exception {
         writeExcel(clazz, dataModels, fieldNames, fieldNames);
     }
- 
+
     /**
      * 抽象方法：写入数据到指定excel文件中，由子类实现
      * 
@@ -140,9 +132,9 @@ public abstract class ExcelHelper {
      *            标题列表
      * @throws Exception
      */
-    public abstract <T> void writeExcel(Class<T> clazz, List<T> dataModels,
-            String[] fieldNames, String[] titles) throws Exception;
- 
+    public abstract <T> void writeExcel(Class<T> clazz, List<T> dataModels, String[] fieldNames, String[] titles)
+        throws Exception;
+
     /**
      * 判断属性是否为日期类型
      * 
@@ -163,7 +155,7 @@ public abstract class ExcelHelper {
         }
         return flag;
     }
- 
+
     /**
      * 根据类型将指定参数转换成对应的类型
      * 
@@ -198,5 +190,4 @@ public abstract class ExcelHelper {
         }
         return result;
     }
- 
 }

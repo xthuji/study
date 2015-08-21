@@ -1,11 +1,12 @@
 package com.work.test.excel;
  
 import java.io.File;
+import java.io.FileInputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
- 
+
 import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
@@ -14,6 +15,9 @@ import jxl.write.WritableCellFormat;
 import jxl.write.WritableFont;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
+
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
  
 /**
  * 基于JXL实现的Excel工具类
@@ -126,6 +130,44 @@ public class JxlExcelHelper extends ExcelHelper {
         return dataModels;
     }
  
+    @Override
+    public List<String> readExcelTitle(int sheetNo) throws Exception {
+        List<String> dataModels = new ArrayList<String>();
+        // 获取excel工作簿
+        Workbook workbook = Workbook.getWorkbook(file);
+        try {
+            Sheet sheet = workbook.getSheet(sheetNo);
+            int rowNo = 0;//首行所在行数
+            boolean getRow1No = false;//是否找到了首行
+            for (int i = 0; i < sheet.getRows(); i++) {
+                if (getRow1No) {
+                    break;
+                }
+                for (int j = 0; j < sheet.getColumns(); j++) {
+                    // 获取excel单元格的内容
+                    Cell cell = sheet.getCell(j, i);
+                    if (cell == null) {
+                        continue;
+                    }else {
+                        if (!getRow1No) {
+                            rowNo = i;
+                            getRow1No = true;
+                        }
+                        if (rowNo == i) {
+                            String content = cell.getContents();
+                            dataModels.add(content);
+                        }
+                    }
+                }
+            }
+        } finally {
+            if (workbook != null) {
+                workbook.close();
+            }
+        }
+        return dataModels;
+    }
+
     @Override
     public <T> void writeExcel(Class<T> clazz, List<T> dataModels,
             String[] fieldNames, String[] titles) throws Exception {

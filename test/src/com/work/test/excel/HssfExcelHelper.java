@@ -7,7 +7,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
- 
+
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
@@ -15,6 +15,10 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  
 /**
  * 基于POI实现的Excel工具类
@@ -125,6 +129,29 @@ public class HssfExcelHelper extends ExcelHelper {
         return dataModels;
     }
  
+    @Override
+    public List<String> readExcelTitle(int sheetNo) throws Exception {
+        List<String> dataModels = new ArrayList<String>();
+        // 获取excel工作簿
+        HSSFWorkbook workbook = new HSSFWorkbook(new FileInputStream(file));
+        HSSFSheet sheet = workbook.getSheetAt(sheetNo);
+        int start = sheet.getFirstRowNum(); // 标题行
+        HSSFRow row = sheet.getRow(start);
+        int coloumSize = row.getPhysicalNumberOfCells();
+        if (row != null) {
+            for (int j = 0; j < coloumSize; j++) {
+                // 获取excel单元格的内容
+                HSSFCell cell = row.getCell((short) j);
+                String content = null;
+                if (cell != null) {
+                    content = cell.getStringCellValue();
+                }
+                dataModels.add(content);
+            }
+        }
+        return dataModels;
+    }
+
     @Override
     public <T> void writeExcel(Class<T> clazz, List<T> dataModels,
             String[] fieldNames, String[] titles) throws Exception {

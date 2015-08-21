@@ -41,7 +41,7 @@ public class TestClient {
             eh3.writeExcel(Employee.class, employees);
             eh3.writeExcel(Employee.class, employees, fieldNames, titles);
             List<Employee> list3 = eh3.readExcel(Employee.class, fieldNames, true);
-            System.out.println("-----------------POI2007.xls-----------------");
+            System.out.println("-----------------POI2007.xlsx-----------------");
             for (Employee user : list3) {
                 System.out.println(user);
             }
@@ -57,7 +57,7 @@ public class TestClient {
             File file3 = new File("E:\\POI2007.xlsx");
             ExcelHelper eh3 = XssfExcelHelper.getInstance(file3);
             List<Employee> list3 = eh3.readExcel(Employee.class, fieldNames, true);
-            System.out.println("-----------------POI2007.xls-----------------");
+            System.out.println("-----------------POI2007.xlsx-----------------");
             for (Employee user : list3) {
                 System.out.println(user);
             }
@@ -65,7 +65,7 @@ public class TestClient {
             e.printStackTrace();
         }
     }
-    
+
     @Test
     public void test3() {
         try {
@@ -73,7 +73,23 @@ public class TestClient {
             int sheetNo = 1;
             ExcelHelper eh3 = XssfExcelHelper.getInstance(file3);
             List<String> title = eh3.readExcelTitle(sheetNo);
-            System.out.println("-----------------POI2007.xls--title----------------");
+            System.out.println("-----------------POI2007.xlsx--title----------------");
+            for (String coloum : title) {
+                System.out.println(coloum);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void test4() {
+        try {
+            File file3 = new File("E:\\JXL2003.xls");
+            int sheetNo = 1;
+            ExcelHelper eh3 = JxlExcelHelper.getInstance(file3);
+            List<String> title = eh3.readExcelTitle(sheetNo);
+            System.out.println("-----------------JXL2003.xls--title----------------");
             for (String coloum : title) {
                 System.out.println(coloum);
             }
