@@ -2,7 +2,6 @@ package com.work.test.letv.test;
 
 import org.junit.Test;
 
-import com.letv.common.utils.coscon.SignatureVerificationUtil;
 import com.work.test.tools.HttpUtils;
 
 public class ReversLogisticsTest {
@@ -27,7 +26,7 @@ public class ReversLogisticsTest {
     @Test
     public void sign() throws Exception {
         String orderNo = "2014112700001"+"devEncryptionKey";
-        String sign = SignatureVerificationUtil.generateSign(orderNo, "utf-8");
-        System.out.println(sign);
+//        String sign = SignatureVerificationUtil.generateSign(orderNo, "utf-8");
+//        System.out.println(sign);
     }
 }

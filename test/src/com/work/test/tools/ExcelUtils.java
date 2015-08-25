@@ -69,4 +69,29 @@ public class ExcelUtils {
 		}
 		return true;
 	}
+	
+	/**
+	 *  导出EXCEL
+	 * @Description:
+	 * @param templateName
+	 * @param data
+	 * @param outpurPath
+	 * @param isFullPath   是否完整路径
+	 * @return
+	 */
+	public static boolean createExcel(String templateName, Map data,
+	    String outpurPath, boolean isFullPath) {
+	    try {
+	        if (isFullPath) {
+                gen(templateName, data, outpurPath);
+            }else {
+                gen(getReportTemplatePath(templateName),
+                        data, getReportOutPath(outpurPath));
+            }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	    return true;
+	}
 }
