@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>rotated-tick-labels</title>
+<link rel="stylesheet" type="text/css" href="../css/examples.css" />
+<link rel="stylesheet" type="text/css" href="../css/jquery.jqplot.css" />
+<!--[if lt IE 9]><script type="javascript" type="text/javascript" src="excanvas.js"></script><![endif]-->
+
+<script type="text/javascript" src="../js/jquery-1.4.4.min.js"></script>
+<script type="text/javascript" src="../js/jquery.jqplot.js"></script>
+<script type="text/javascript" src="../js/jqplot.pointLabels.min.js"></script>
+<script type="text/javascript" src="../js/jqplot.categoryAxisRenderer.js" ></script>  
+<script type="text/javascript">
+$(function() {
+    // The url for our json data
+    var jsonurl = "/report/AjaxServlet";
+
+    $.ajax({
+        // have to use synchronous here, else the function 
+        // will return before the data is fetched
+        async: false,
+        url: jsonurl,
+        dataType: "json",
+        success: function(msg) {
+        	 var dataValue = new Array(); //数据  
+             var ticks = new Array(); //横坐标值  
+             $(msg).each(function (index, value) {  
+                 dataValue.push(msg[index].Consume);  
+                 ticks.push(msg[index].YearMonth);  
+             });   
+            $("#chart1").html("");  
+            
+			var plot1 = $.jqplot('chart1', [dataValue], {
+				legend : {
+					show : true,
+					location : 'nw'
+				},
+				seriesDefaults: {  
+                    pointLabels: { show: true },  //显示节点的数据
+                },
+				series:[//如果有多个分类需要显示，这在此处设置各个分类的相关配置属性  
+				        //eg.设置各个分类在分类名称框中的分类名称  
+				        {label: 'Traps Division'}
+				     ],  
+                title: $("#User").find("option:selected").text() + '--月度消费统计表( Last 12 Monthes)', //标题  
+				axes : {
+					xaxis : {
+						renderer: $.jqplot.CategoryAxisRenderer, // 设置横（纵）轴上数据加载的渲染器  
+	                    autoscale: true ,
+	                    ticks: ticks//设置横（纵）坐标的刻度上的值，可为该ticks数组中的值
+					},
+					yaxis : {
+						pad: 1.40, // 一个相乘因子  
+						min: 0, // 最小值
+                        tickInterval: 10, // 刻度间隔值
+						tickOptions: {
+		                   formatString: '$%.2f'
+		                }
+					}
+				}
+			});
+		},
+		error : function() {
+		}
+	});
+
+});
+</script>
+</head>
+<body>
+<div id="chart1" style="width: 800px; height: 500px;float:left;">  
+</div>  
+</body>
+</html>

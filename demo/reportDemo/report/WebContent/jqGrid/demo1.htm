@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- saved from url=(0042)http://trirand.com/blog/jqgrid/jqgrid.html -->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" style="overflow: hidden; height: 100%; border: none; padding: 0px; margin: 0px;">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+	<title>jqGrid Demos</title>
+
+	<link rel="stylesheet" type="text/css" media="screen" href="./files/jquery-ui-custom.css">
+	<link rel="stylesheet" type="text/css" media="screen" href="./files/ui.jqgrid.css">
+	
+	<script src="./files/jquery.js" type="text/javascript"></script><style type="text/css"></style>
+	<script src="./files/jquery-ui-custom.min.js" type="text/javascript"></script>
+	<script src="./files/grid.locale-en.js" type="text/javascript"></script>
+	<script src="./files/jquery.jqGrid.js" type="text/javascript"></script>
+
+</head>
+<body>
+    <table id="list"></table><!-- 列表 -->
+    <div id="page"></div><!-- 分页组件 -->
+<script type="text/javascript">
+	jQuery("#list").jqGrid({        
+	   	url:'/report/AjaxServletJson',
+		datatype: "json",
+		height: 255,
+		width: 600,
+	   	colModel:[
+	   	   		{name:'id',index:'id', width:60, sorttype:"int"},
+	   	   		{name:'invdate',index:'invdate', width:90, sorttype:"date"},
+	   	   		{name:'name',index:'name', width:100},
+	   	   		{name:'amount',index:'amount', width:80, align:"right",sorttype:"float"},
+	   	   		{name:'tax',index:'tax', width:80, align:"right",sorttype:"float"},		
+	   	   		{name:'total',index:'total', width:80,align:"right",sorttype:"float"},		
+	   	   		{name:'note',index:'note', width:150, sortable:false}		
+	   	   	],
+	   	rowNum:20,
+	   	rowList:[10,20,30],
+	   	pager: '#page',
+	   	sortname: 'id',
+	    viewrecords: true,
+	    sortorder: "desc",
+	    loadonce: true,
+	    caption: "Load Once Example"
+	});
+</script>
+</body>

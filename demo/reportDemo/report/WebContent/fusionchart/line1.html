@@ -1,0 +1,130 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<TITLE>FusionCharts Free - Client Side Chart Plotting</TITLE>	
+	<SCRIPT LANGUAGE="Javascript" SRC="../js/FusionCharts.js"></SCRIPT>
+	<SCRIPT LANGUAGE="Javascript" SRC="../js/jquery-1.4.4.min.js"></SCRIPT>
+	
+	<SCRIPT LANGUAGE="JavaScript">
+		//多条数据
+		var data = new Array();
+		//X轴值
+		var XPartName = new Array();
+		
+		//the array of colors contains 4 unique Hex coded colours (without #) for the 4 products
+		var colors=new Array();
+		
+		var templatePath="";
+		
+		/**
+		 * generateXML method returns the XML data for the chart based on the
+		 * checkboxes which the user has checked.
+		 *	@param	animate		Boolean value indicating to  animate the chart.
+		 *	@return				XML Data for the entire chart.
+		*/		
+		function generateXML(){			
+			//Variable to store XML
+			var strXML="";
+			
+			//<graph> element
+			//Added animation parameter based on animate parameter			
+			//Added value related attributes if show value is selected by the user
+			//strXML = "<graph numdivlines='4' lineThickness='3' numVDivLines='10' formatNumberScale='1' rotateNames='1' decimalPrecision='0' anchorRadius='2' anchorBgAlpha='0' numberPrefix='$' divLineAlpha='30' showAlternateHGridColor='1'  showValues='1' caption='月度消费统计表' xAxisName='月份' yAxisName='金额' yaxismaxvalue='30' shadowAlpha='50' >";
+			strXML = "<graph caption='月度消费统计表' subcaption='For the year 2013' xAxisName='Month' yAxisName='money' decimalPrecision='0' numVDivLines='"+(XPartName.length-2)+"' formatNumberScale='0' numberPrefix='$' showNames='1' showValues='0'  showAlternateHGridColor='1' AlternateHGridColor='ff5904' divLineColor='ff5904' divLineAlpha='20' alternateHGridAlpha='5' >";
+			
+			//Store <categories> and child <category> elements
+			strXML = strXML + "<categories>";
+			$.each(XPartName, function(index, value) {
+				strXML = strXML + "<category name='"+value+"' />";
+	        });
+			strXML = strXML + "</categories>"
+
+			//Based on the products for which we've to generate data, generate XML			
+			$.each(data, function(index, value) {
+				strXML = strXML + getProductXML(index);
+	        });
+			
+			//Close <graph> element;
+			strXML = strXML + "</graph>";
+
+			//Return data
+			return strXML;
+		}
+		
+		/**
+		 * getProductXML method returns the <dataset> and <set> elements XML for
+		 * a particular product index (in data array). 
+		 *	@param	productIndex	Product index (in data array)
+		 *	@return					XML Data for the product.
+		*/
+		function getProductXML(productIndex){		
+			var productXML;
+			//Create <dataset> element taking data from 'data' array and color vaules from 'colors' array defined above
+			productXML = "<dataset seriesName='" + data[productIndex][0] + "' color='"+ colors[productIndex]  +"' anchorRadius='4'>";			
+			//Create set elements
+			for (var i=1, l= XPartName.length; i<=l; i++){
+				productXML = productXML + "<set value='" + data[productIndex][i] + "' />";
+			}
+			//Close <dataset> element
+			productXML = productXML + "</dataset>";
+			//Return dataset data
+			return productXML;			
+		}
+		function report (){
+			var chart1 = new FusionCharts(templatePath, "chart1Id", "800", "600");		   
+			//Initialize graph with chart data returned by generateXML() function. [ note: the parameter 'this.document.productSelector.AnimateChart.checked' is passed to set animation property of the chart]
+			//loading XML data into variable strXML 
+			var strXML=generateXML();
+			chart1.setDataXML(strXML);
+			chart1.render("chart1div");
+			
+		}
+		
+	</SCRIPT>
+</HEAD>
+<BODY>
+	<CENTER>
+		<div id="chart1div">
+			FusionCharts
+		</div>
+		<script language="JavaScript">					
+		$(function() {
+		    // The url for our json data
+		    var jsonurl = "/report/AjaxServlet2";
+
+		    $.ajax({
+		        async: false,
+		        url: jsonurl,
+		        dataType: "json",
+		        success: function(msg) {
+		            data = new Array(); //多条数据  
+			        XPartName = new Array(); //横坐标值  
+			        colors = new Array("AFD8F8", "F6BD0F", "8BBA00");
+					templatePath="./swf/FCF_MSLine.swf";
+
+		            $(msg).each(function (index, value) {
+			            var dataValue = new Array(); //数据  
+				        var tick = new Array(); //横坐标值  
+			            var vdate = eval(msg[index]);
+		            	dataValue.push("类别"+index);  
+			            $(vdate).each(function (index, value) { 
+				            var value = new Array(); //数据  
+				            value.push(vdate[index].Consume);  
+			                tick.push(vdate[index].YearMonth);
+			                dataValue.push(value);  
+			            });
+			            XPartName = tick;  
+		                data.push(dataValue);  
+		            });   
+		            report();           
+				},
+				error : function() {
+				}
+			});
+
+		});
+		</script>
+		<BR />
+	</CENTER>
+</BODY>
+</HTML>

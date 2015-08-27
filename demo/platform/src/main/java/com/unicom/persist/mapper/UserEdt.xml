@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.unicom.persist.mapper.UserEdt">
+
+	<insert id="insertUser">
+		insert into t_user(user_name,email,phone,address,age)
+		values(
+		#{userName}, #{email}, #{phone} ,#{address}, #{age}
+		)
+	</insert>
+	<!-- 删除 -->
+	<delete id="deleteUser" >
+		delete from
+		t_user
+		WHERE user_Id in
+		<foreach item="idItem" collection="userIds" open="(" separator=","
+			close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 修改 -->
+	<update id="updateUser" parameterType="com.unicom.entity.User">
+		UPDATE
+		t_user
+		<set>
+			<if test="userName != null and userName != '' ">
+				user_Name=#{userName},
+			</if>
+			<if test="email != null and email != '' ">
+				email=#{email},
+			</if>
+			<if test="phone != null and phone != '' ">
+				phone=#{phone},
+			</if>
+			<if test="address != null and address != '' ">
+				address=#{address},
+			</if>
+			<if test="age != null and age != '' ">
+				age=#{age}
+			</if>
+		</set>
+		WHERE user_Id = #{userId}
+	</update>
+
+</mapper>

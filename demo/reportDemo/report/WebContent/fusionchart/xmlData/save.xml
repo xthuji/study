@@ -1,0 +1,7 @@
+<chart yAxisName='Sales Figure' caption='Top 5 Sales Person' numberPrefix='$' useRoundEdges='1' bgColor='FFFFFF,FFFFFF' showBorder='0' exportEnabled='1' exportAtClient='1' exportHandler='fcExporter1' showAboutMenuItem='0' exportFormats='JPG=保存为JPEG图片|PNG=保存为PNG图片|PDF=保存为PDF'>
+  <set label='Alex' value='25000'  link='http://www.baidu.com' />  
+  <set label='Mark' value='35000' link='http://www.baidu.com' />
+  <set label='David' value='42300' link='http://www.baidu.com' />
+  <set label='Graham' value='35300' link='http://www.baidu.com' />
+  <set label='John' value='31300' link='http://www.baidu.com' />
+</chart>

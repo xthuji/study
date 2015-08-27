@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>rotated-tick-labels</title>
+<link rel="stylesheet" type="text/css" href="../css/examples.css" />
+<link rel="stylesheet" type="text/css" href="../css/jquery.jqplot.css" />
+<!--[if lt IE 9]><script type="javascript" type="text/javascript" src="excanvas.js"></script><![endif]-->
+
+<script type="text/javascript" src="../js/jquery-1.4.4.min.js"></script>
+<script type="text/javascript" src="../js/jquery.jqplot.js"></script>
+<script type="text/javascript" src="../js/jqplot.cursor.js"></script>
+<script type="text/javascript" src="../js/jqplot.dateAxisRenderer.js"></script>
+<script type="text/javascript" src="../js/jqplot.canvasAxisTickRenderer.js"></script>
+<script type="text/javascript" src="../js/jqplot.canvasTextRenderer.js"></script>
+<script type="text/javascript" src="../js/jqplot.categoryAxisRenderer.js" ></script>  
+<script type="text/javascript" src="../js/jqplot.highlighter.js"></script> 
+<script type="text/javascript">
+$(function() {
+    // The url for our json data
+    var jsonurl = "/report/AjaxServlet2";
+    $.jqplot.config.enablePlugins = true;
+
+    $.ajax({
+        // have to use synchronous here, else the function 
+        // will return before the data is fetched
+        async: false,
+        url: jsonurl,
+        dataType: "json",
+        success: function(msg) {
+            var data = new Array(); //数据  
+	        var ticks = new Array(); //横坐标值  
+            $(msg).each(function (index, value) {
+	            var dataValue = new Array(); //数据  
+		        var tick = new Array(); //横坐标值  
+	            var vdate = eval(msg[index]);
+	            $(vdate).each(function (index, value) { 
+		            var value = new Array(); //数据  
+		            value.push(vdate[index].YearMonth);  
+		            value.push(vdate[index].Consume);  
+	                tick.push(vdate[index].YearMonth);
+	                dataValue.push(value);  
+	            });
+	            ticks = tick;  
+                data.push(dataValue);  
+            });   
+            $("#chart1").html("");  
+            line1 = [['1/1/2006', 5], ['2/1/2006', 1], ['3/1/2006', 3], ['4/1/2006', 7]];
+            line2 = [['1/1/2006', 2], ['2/1/2006', 6], ['3/1/2006', 4], ['4/1/2006', 3]];
+                        
+			var plot1 = $.jqplot('chart1', data, {
+				// 显示线条分类框
+				legend : {
+					show : true,
+					location : 'nw'
+				},
+				series:[//如果有多个分类需要显示，这在此处设置各个分类的相关配置属性  
+				        //eg.设置各个分类在分类名称框中的分类名称  
+				        {label: 'Traps Division'},{label: 'Decoy Division'},{label: 'Harmony Division'}  
+				     ],  
+                title: $("#User").find("option:selected").text() + '--月度消费统计表( Last 12 Monthes)', //标题  
+				axes : {
+					xaxis : {
+						renderer:$.jqplot.DateAxisRenderer, // 设置渲染器  点在线上 
+						// 注意：点在线上时，对数据有严格要求。参考  line1和ticks
+	                    autoscale: true ,
+	                    tickOptions: {
+		                   formatString: '%Y-%m'
+		                },
+	                    ticks: ticks//设置横（纵）坐标的刻度上的值，可为该ticks数组中的值
+	                    //ticks:['12/1/2005', '1/1/2006', '2/1/2006', '3/1/2006', '4/1/2006', '5/1/2006', '6/1/2006', '7/1/2006']
+					},
+					yaxis : {
+						pad: 1.40, // 一个相乘因子  
+	                    autoscale: true ,
+						tickOptions: {
+		                   formatString: '$%.2f'
+		                }
+					}
+				},
+				highlighter: { 
+					bringSeriesToFront: true, 
+					tooltipLocation: 'e', 
+					tooltipOffset: 0, 
+					//显示两个值，坐标序号、坐标值，用%s取得
+					//formatString: '<div class="jqplot-highlighter"><span>%s 月份消费金额为：</span><strong>%s</strong></div>' ,
+					//取y轴值
+					tooltipAxes: 'y',
+					formatString: '<div class="jqplot-highlighter"><span>消费金额为：</span><strong>%s</strong></div>' ,
+				} ,
+		        cursor: {
+		            show: true,
+		            zoom: true
+		        }
+			});
+		},
+		error : function() {
+		}
+	});
+
+});
+</script>
+</head>
+<body>
+<div id="chart1" style="width: 800px; height: 500px;float:left;">  
+</div>  
+</body>
+</html>

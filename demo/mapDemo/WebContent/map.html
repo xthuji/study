@@ -1,0 +1,189 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<META http-equiv=Content-Type content="text/html; charset=UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+  <title>地图标注</title>
+	<style type="text/css">
+<!--
+body{margin:0;padding:0;background:#fff;font:normal normal normal 12px "Lucida Grande", Verdana, Lucida, Arial, Helvetica, "宋体",sans-serif;}
+div,form,p,img,ul,ol,li,
+dl,h1,h2,h3,h4,h5,h6{list-style:none;margin:0;padding:0;border:0;text-align:left;}
+a{color:#00c;}
+a:link,a:visited,a:active{text-decoration:underline;}
+a:hover{text-decoration:none;}
+.clearHide{overflow:hidden;clear:both;height:0;font-size:0;}
+h1,h2,h3,h4,h5,h6{font-size:14px;}
+input,select,textarea{font-size:12px;font-family:Arial;line-height:15px;}
+
+.box{margin:auto;}
+.box_top{height:26px;position:relative;z-index:5;}
+.box_d{ text-align:center;border:1px solid #999}
+.box_01{ margin-right:5px; width:26px; height:23px;}
+.box_02{ width:40px; height:23px; line-height:20px;}
+.mapBut{overflow:hidden;position:absolute;z-index:90;right:5px;width:179px;height:41px;top:33px;}
+.mapBut a{display:block;height:100%;background:url(http://r.mapbar.com/searchbox/publish/icon/mapBut.png) no-repeat;_background:none;}
+.mapBut a b{display:none;}
+.mapBut img{position:relative;display:none;_display:block;height:100%;_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src=http://r.mapbar.com/searchbox/publish/icon/mapBut.png,sizingMethod='image');}
+.mapBut a:hover{background-position:0 -42px;}
+.mapBut a:hover img{top:-42px;}
+-->
+	</style>
+	<script language="javascript" src="http://api.mapbar.com/api/mapbar31.2.js"></script>
+  <script language="javascript" src="http://r.mapbar.com/searchbox/publish/js/prototype.js"></script>
+  <script language="javascript" src="http://searchbox.mapbar.com:80/publish/js/common.jsp"></script>
+  <script type="text/javascript" src="http://img.mapbar.com/web/city/cityDataWithBus.pack.js"></script>
+  <script language="javascript">
+	var maplet = null;
+	var poi = {nid:"",latLon:""};
+	var proxy = location.href.substring(0,location.href.indexOf("?"));
+	if (proxy.indexOf("proxy")==-1) proxy = "http://searchbox.mapbar.com:80/publish/common/proxy.jsp";
+	
+	function onLoad() {
+		maplet = new Maplet("mapbar");
+		<!--<mapx xid="mapbar">-->
+		maplet.centerAndZoom(new MPoint("北京市"), 10);
+		
+		 	  
+			maplet.addControl(new MStandardControl('baidu',0,0,0));
+				
+		maplet.showScale(true);
+		maplet.showLogo(true);
+		
+		
+		maplet.ovw.close();
+		
+		<!--</mapx>-->
+		MEvent.addListener(maplet, "bookmark", mapBookmark); 		//test:%E4%B8%8A%E6%B5%B7%E5%B8%82
+		
+			go2City("北京市");
+		
+		maplet.setZoomLevel(10);
+		maplet.resize(640,463);
+		
+	}
+	function go2City(cityName) {
+		cityName = getCityOptionByName(document.getElementById("city"), cityName);
+		if (!cityName || "" == cityName) return;
+		var center = getCityByName(cityName)["center"];
+		if (!center || "" == center) return;
+		if(cityName=="全国"){
+			maplet.centerAndZoom(new MPoint(center), 1);	
+		}else{
+			maplet.centerAndZoom(new MPoint(center), 8);
+		}
+	}
+	function go2Search(addName) {
+	  var cityName = document.getElementById("city").value;
+	  var keyword = "";
+	  if(addName==null || addName==""){
+		  keyword = document.getElementById("name").value;
+	  }else{
+		  keyword = addName;
+	  }
+	  if (!cityName || !keyword || keyword=="") {
+	    document.getElementById("name").focus();
+	    alert("请输入定位关键字.");
+	    return;
+	  }
+		poi["latLon"] = getPoiByKeyword(cityName, keyword, proxy)["latLon"];
+	  if (!poi["latLon"] || "" == poi["latLon"]) { 
+	    alert("无相关位置信息."); 
+	    return; 
+	  }else{
+		maplet.centerAndZoom(poi["latLon"],12);
+		mapMark();
+	  }
+	}
+	function mapBookmark(params) {
+	  maplet.setMode("pan");
+    poi["latLon"] = params.substring(params.indexOf("&latlon")+8, params.indexOf("&zm="));
+    mapMark();
+	}
+	function mapMark() {
+    maplet.clearOverlays();  
+    var marker = new MMarker(new MPoint(poi["latLon"]), new MIcon('<img src="http://r.mapbar.com/searchbox/publish/icon/biaozhu.gif" />'), null); 
+	marker.setEditable(true);
+	MEvent.addListener(maplet, 'edit', editCallback);
+    maplet.addOverlay(marker);
+	
+	maplet.setCenter(new MPoint(poi["latLon"]));
+	}
+	function go2Mark() {
+	  if (!poi["latLon"] || poi["latLon"] == "") {
+	    alert("请先标注位置");
+	    return;
+	  }
+	  if (location.href.indexOf("proxy")>=0) {
+	  	$('poiService').src= "proxy.jsp?api=poiUpdate&nid="+poi["nid"]+
+	    	"&latLon="+poi["latLon"]+"&CID=8wy821029&tid=tid2000&cityName=%E5%8C%97%E4%BA%AC%E5%B8%82&width=640&height=463&control=2";
+	  } else {
+	  	$('poiService').src= "http://searchbox.mapbar.com:80/publish/common/proxy.jsp?api=poiUpdate&nid="+poi["nid"]+
+	    	"&latLon="+poi["latLon"]+"&CID=8wy821029&tid=tid2000&cityName=%E5%8C%97%E4%BA%AC%E5%B8%82&width=640&height=463&control=2";
+	  }
+	}
+	function clearMap() {
+		poi["latLon"] = "";
+		maplet.clearOverlays();
+	}
+	function setNid(nid){
+	    poi["nid"] = nid;
+		try {
+		  opener.setNid(nid);
+		  alert("您的信息已经标注成功!");
+		  window.close();
+		} catch (e) {}
+	}
+	function getLatLon() {
+	  return poi["latLon"];
+	}
+	function editCallback(marker){
+		poi["latLon"]= marker.pt.pid;
+	}
+	function getCityValue(){
+		return document.getElementById("city").value;
+	}
+	var cityListRs = {
+    initcityOption:function(defaultcity){
+        for(var i=0;i<cityData.province.length;i++){
+            document.writeln('<option value='+cityData.province[i].pname+'>'+cityData.province[i].pname+'</option>\n');
+            for(var j=0;j<cityData.province[i].city.length;j++){
+				if(defaultcity==cityData.province[i].city[j].cityName){
+					document.writeln('<option value='+cityData.province[i].city[j].cityName+' selected >&nbsp;├'+cityData.province[i].city[j].cityName+'</option>\n');
+				}else{
+					document.writeln('<option value='+cityData.province[i].city[j].cityName+' >&nbsp;├'+cityData.province[i].city[j].cityName+'</option>\n');
+				}
+            }
+        }
+    } 
+	}
+	</script>
+</head>
+<body topmargin="0" leftmargin="0" onload="onLoad()">
+<iframe id="poiService" name="poiService" src="" width=0 height=0 frameborder=0 style="display:none\a;"></iframe>
+<table width="401" border="0" align="center" class="box">
+<tr><td>
+	<div class="box_top">
+	    <mapx xid="cities">
+		  <select id="city" name="city" style="width:84px;display:" onchange="go2City(this.value)">
+		    
+			    <script language="javascript">document.write(cityListRs.initcityOption());</script>
+			  
+		  </select>
+		  </mapx>
+			<mapx xid="searcher">
+			
+		  </mapx>
+		  
+		  <mapx xid="reset">
+		  
+		 <div class="mapBut">
+			
+		</div>
+		</mapx>
+	</div>
+	<div id="mapbar" class="box_d"/></div>
+</td></tr>
+</table>	
+</body>
+</html>

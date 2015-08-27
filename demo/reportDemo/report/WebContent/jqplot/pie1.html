@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>rotated-tick-labels</title>
+<link rel="stylesheet" type="text/css" href="../css/jquery.jqplot.css" />
+<!--[if lt IE 9]><script type="javascript" type="text/javascript" src="excanvas.js"></script><![endif]-->
+
+<script type="text/javascript" src="../js/jquery-1.4.4.min.js"></script>
+<script type="text/javascript" src="../js/jquery.jqplot.js"></script>
+<script type="text/javascript" src="../js/jqplot.barRenderer.js" ></script>  
+<script type="text/javascript" src="../js/jqplot.categoryAxisRenderer.js" ></script>  
+<script type="text/javascript" src="../js/jqplot.pointLabels.min.js" ></script>  
+<script type="text/javascript" src="../js/jqplot.pieRenderer.min.js" ></script>  
+<script type="text/javascript">
+$(function() {
+    // The url for our json data
+    var jsonurl = "/report/AjaxServlet";
+
+    $.ajax({
+        // have to use synchronous here, else the function 
+        // will return before the data is fetched
+        async: false,
+        url: jsonurl,
+        dataType: "json",
+        success: function(msg) {
+            var data = new Array(); //数据  
+            $(msg).each(function (index, value) {  
+	            var dataValue = new Array(); //数据  
+                dataValue[0] = (msg[index].YearMonth); 
+                dataValue[1] = (msg[index].Consume);  
+                data.push(dataValue); 
+            });  
+            $("#chart1").html("");  
+            
+            //s1 = [['Sony',7], ['Samsumg',13.3], ['LG',14.7], ['Vizio',5.2], ['Insignia', 1.2]];
+            
+            plot2 = $.jqplot('chart1', [data], {
+                title: $("#User").find("option:selected").text() + '--月度消费统计表( Last 12 Monthes)', //标题  
+                
+				//设置颜色
+            	//seriesColors: [ "#4bb2c5", "#c5b47f", "#EAA228", "#579575", "#839557", "#958c12", "#953579", "#4b5de4", "#d8b83f", "#ff5800", "#0085cc"],
+                seriesDefaults:{
+                    renderer:$.jqplot.PieRenderer,
+                    rendererOptions: {
+                        showDataLabels: true,
+                        diameter: 400, 
+                        dataLabelThreshold: 1,
+                        dataLabelFormatString: '%.1f%%'
+                    }
+                },
+                legend: {
+                    show: true,
+                    rendererOptions:{
+                        numberColumns:2 //分两列显示
+                    },
+                    location: 'ne', // 分类框在图的右侧
+                    //placement: 'outside'  // 分类框在图表外
+                    xoffset: 12,        // 分类名称框距图表区域上边框的距离（单位px）  
+       				yoffset: 12,        // 分类名称框距图表区域左边框的距离(单位px)  
+                }
+            }); 
+ 
+        },
+        error:function(){
+        }
+    });
+    
+});
+</script>
+</head>
+<body>
+    <div id="chart1" style="width: 800px; height: 500px;float:left;"> 
+    </div>  
+</body>
+</html>

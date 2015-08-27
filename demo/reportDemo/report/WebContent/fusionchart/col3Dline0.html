@@ -1,0 +1,102 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<TITLE>FusionCharts Free - Client Side Chart Plotting</TITLE>	
+	<style type="text/css">
+	<!--
+	body {
+		font-family: Arial, Helvetica, sans-serif;
+		font-size: 12px;
+	}
+	-->
+	</style>
+	<SCRIPT LANGUAGE="Javascript" SRC="../js/FusionCharts.js"></SCRIPT>
+	<SCRIPT LANGUAGE="Javascript" SRC="../js/jquery-1.4.4.min.js"></SCRIPT>
+	
+	<SCRIPT LANGUAGE="JavaScript">
+		//We store all our data in an array data. It contains data for three Products
+		//for 3 quarters. The first column of each array contains the product Name.
+		//Thereafter 4 columns contain data for 4 quarters.
+		var data = new Array();
+		//Data for each product
+		data[0] = new Array("Product A",659400,465400,764500,650500);
+		data[1] = new Array("Product B",546300,436500,546500,332500);
+		data[2] = new Array("Product C",657600,564600,348600,436600);
+		data[3] = new Array("Product D",436500,765700,453900,326400);
+
+		var XPartName = new Array("Quarter 1","Quarter 2","Quarter 3","Quarter 4");
+		
+		//the array of colors contains 4 unique Hex coded colours (without #) for the 4 products
+		var colors=new Array("AFD8F8", "F6BD0F", "8BBA00", "FF8E46");
+		
+		/**
+		 * generateXML method returns the XML data for the chart based on the
+		 * checkboxes which the user has checked.
+		 *	@param	animate		Boolean value indicating to  animate the chart.
+		 *	@return				XML Data for the entire chart.
+		*/		
+		function generateXML(){			
+			//Variable to store XML
+			var strXML="";
+			
+			//<graph> element
+			//Added animation parameter based on animate parameter			
+			//Added value related attributes if show value is selected by the user
+			strXML = 
+				"<graph caption='Sales' PYAxisName='Revenue' SYAxisName='Quantity'"+
+				" numberPrefix='$' showvalues='0'  numDivLines='4' formatNumberScale='0' decimalPrecision='0'"+
+				"anchorSides='10' anchorRadius='3' anchorBorderColor='009900'>"+
+				"<categories>"+
+				"<category name='March' />"+
+				"<category name='April' />"+
+				"<category name='May' />"+
+				"<category name='June' />"+
+				"<category name='July' />"+
+				"</categories>"+
+				"<dataset seriesName='Product A' color='AFD8F8' showValues='0'>"+
+				"<set value='25601.34' />"+
+				"<set value='20148.82' />"+
+				"<set value='17372.76' />"+
+				"<set value='35407.15' />"+
+				"<set value='38105.68' />"+
+				"</dataset>"+
+				"<dataset seriesName='Product B' color='F6BD0F' showValues='0' >"+
+				"<set value='57401.85' /> "+
+				"<set value='41941.19' />"+
+				"<set value='45263.37' />"+
+				"<set value='117320.16' />"+
+				"<set value='114845.27' />"+
+				"</dataset>"+
+				"<dataset seriesName='Total Quantity' color='8BBA00' showValues='0' parentYAxis='S' >"+
+				"<set value='45000' />"+
+				"<set value='44835' />"+
+				"<set value='42835' />"+
+				"<set value='77557' />"+
+				"<set value='92633' />"+
+				"</dataset>"+
+				"</graph>";
+
+			//Return data
+			return strXML;
+		}
+		
+	</SCRIPT>
+</HEAD>
+<BODY>
+	<CENTER>
+		<div id="chart1div">
+			FusionCharts
+		</div>
+		
+		<script language="JavaScript">					
+			var chart1 = new FusionCharts("./swf/FCF_MSColumn3DLineDY.swf", "chart1Id", "600", "400");		   
+			//Initialize graph with chart data returned by generateXML() function. [ note: the parameter 'this.document.productSelector.AnimateChart.checked' is passed to set animation property of the chart]
+			//loading XML data into variable strXML 
+			var strXML=generateXML();
+			chart1.setDataXML(strXML);
+			chart1.render("chart1div");
+		</script>
+		<BR />
+	</CENTER>
+</BODY>
+</HTML>

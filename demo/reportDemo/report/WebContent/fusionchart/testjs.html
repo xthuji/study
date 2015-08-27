@@ -1,0 +1,64 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<TITLE>FusionCharts Free - Client Side Chart Plotting</TITLE>	
+	<SCRIPT LANGUAGE="Javascript" SRC="../js/FusionCharts.js"></SCRIPT>
+	<SCRIPT LANGUAGE="Javascript" SRC="../js/jquery-1.4.4.min.js"></SCRIPT>
+	<SCRIPT LANGUAGE="Javascript" SRC="./myFusion.js"></SCRIPT>
+	
+	<SCRIPT LANGUAGE="JavaScript">
+	</SCRIPT>
+</HEAD>
+<BODY>
+	<CENTER>
+	<input type="button" value="line" onclick="line()"/>
+	<input type="button" value="pie" onclick="pie()"/>
+	<input type="button" value="pillar" onclick="pillar()"/>
+		<div id="chart1div">
+			FusionCharts
+		</div>
+		<script language="JavaScript">					
+		function line() {
+		    var jsonurl = "/report/AjaxServlet2";
+		    $.ajax({
+		        async: false,
+		        url: jsonurl,
+		        dataType: "json",
+		        success: function(msg) {
+		        	toLine(msg);
+				},
+				error : function() {
+				}
+			});
+		}
+		function pillar() {
+		    var jsonurl = "/report/AjaxServlet2";
+		    $.ajax({
+		        async: false,
+		        url: jsonurl,
+		        dataType: "json",
+		        success: function(msg) {
+		        	toPillar(msg);
+				},
+				error : function() {
+				}
+			});
+		}
+		function pie() {
+		    var jsonurl = "/report/AjaxServlet";
+		    $.ajax({
+		        async: false,
+		        url: jsonurl,
+		        dataType: "json",
+		        success: function(msg) {
+		        	toPie(msg);
+				},
+				error : function() {
+				}
+			});
+		}
+		</script>
+		<BR />
+	</CENTER>
+</BODY>
+</HTML>

@@ -1,0 +1,116 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<TITLE>FusionCharts Free - Client Side Chart Plotting</TITLE>	
+	<style type="text/css">
+	<!--
+	body {
+		font-family: Arial, Helvetica, sans-serif;
+		font-size: 12px;
+	}
+	-->
+	</style>
+	<SCRIPT LANGUAGE="Javascript" SRC="../js/FusionCharts.js"></SCRIPT>
+	<SCRIPT LANGUAGE="Javascript" SRC="../js/jquery-1.4.4.min.js"></SCRIPT>
+	
+	<SCRIPT LANGUAGE="JavaScript">
+		var templatePath="";
+		
+		/**
+		 * generateXML method returns the XML data for the chart based on the
+		 * checkboxes which the user has checked.
+		 *	@param	animate		Boolean value indicating to  animate the chart.
+		 *	@return				XML Data for the entire chart.
+		*/		
+		function generateXML(){			
+			//Variable to store XML
+			var strXML="";
+			strXML = "<graph numdivlines='4' lineThickness='3' showValues='0' numVDivLines='10' formatNumberScale='1' rotateNames='1' decimalPrecision='1' anchorRadius='2' anchorBgAlpha='0' numberPrefix='$' divLineAlpha='30' showAlternateHGridColor='1' yAxisMinValue='800000' shadowAlpha='50' >";
+			strXML = strXML +"<categories >"+
+			"<category Name='Jan' />"+
+			"<category Name='Feb' />"+
+			"<category Name='Mar' />"+
+			"<category Name='Apr' />"+
+			"<category Name='May' />"+
+			"<category Name='Jun' />"+
+			"<category Name='Jul' />"+
+			"<category Name='Aug' />"+
+			"<category Name='Sep' />"+
+			"<category Name='Oct' />"+
+			"<category Name='Nov' />"+
+			"<category Name='Dec' />"+
+			"</categories>"+
+			"<dataset seriesName='Current Year' color='A66EDD' anchorBorderColor='A66EDD' anchorRadius='4'> "+
+			"	<set value='1127654' link='http://www.baidu.com' />"+
+			"	<set value='1226234' link='http://www.baidu.com' />"+
+			"	<set value='1299456' link='http://www.baidu.com' />"+
+			"	<set value='1311565' link='http://www.baidu.com' />"+
+			"	<set value='1324454' link='http://www.baidu.com' />"+
+			"	<set value='1357654' link='http://www.baidu.com' />"+
+			"	<set value='1296234' link='http://www.baidu.com' />"+
+			"	<set value='1359456' link='http://www.baidu.com' />"+
+			"	<set value='1391565' link='http://www.baidu.com' />"+
+			"	<set value='1414454' link='http://www.baidu.com' />"+
+			"	<set value='1671565' link='http://www.baidu.com' />"+
+			"	<set value='1134454' link='http://www.baidu.com' />"+
+			"</dataset>"+
+			"<dataset seriesName='Previous Year' color='F6BD0F' anchorBorderColor='F6BD0F' anchorRadius='4'>  "+
+			"	<set value='927654' link='http://www.baidu.com' /> "+
+			"	<set value='1126234' link='http://www.baidu.com' />"+
+			"	<set value='999456' link='http://www.baidu.com' /> "+
+			"	<set value='1111565' link='http://www.baidu.com' />"+
+			"	<set value='1124454' link='http://www.baidu.com' />"+
+			"	<set value='1257654' link='http://www.baidu.com' />"+
+			"	<set value='1196234' link='http://www.baidu.com' />"+
+			"	<set value='1259456' link='http://www.baidu.com' />"+
+			"	<set value='1191565' link='http://www.baidu.com' />"+
+			"	<set value='1214454' link='http://www.baidu.com' />"+
+			"	<set value='1371565' link='http://www.baidu.com' />"+
+			"	<set value='1434454' link='http://www.baidu.com' />"+
+			"</dataset> ";
+			strXML = strXML + "</graph>";
+
+			//Return data
+			return strXML;
+		}
+		
+		function report (){
+			var chart1 = new FusionCharts(templatePath, "chart1Id", "500", "300");		   
+			//Initialize graph with chart data returned by generateXML() function. [ note: the parameter 'this.document.productSelector.AnimateChart.checked' is passed to set animation property of the chart]
+			//loading XML data into variable strXML 
+			var strXML=generateXML();
+			chart1.setDataXML(strXML);
+			chart1.render("chart1div");
+			
+		}
+		
+	</SCRIPT>
+</HEAD>
+<BODY>
+	<CENTER>
+		<div id="chart1div">
+			FusionCharts
+		</div>
+		<script language="JavaScript">					
+		$(function() {
+		    // The url for our json data
+		    var jsonurl = "/report/AjaxServlet2";
+
+		    $.ajax({
+		        async: false,
+		        url: jsonurl,
+		        dataType: "json",
+		        success: function(msg) {
+					templatePath="./swf/FCF_MSLine.swf";
+		            report();           
+				},
+				error : function() {
+				}
+			});
+
+		});
+		</script>
+		<BR />
+	</CENTER>
+</BODY>
+</HTML>

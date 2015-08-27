@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.unicom.persist.mapper.UserSer">
+	<resultMap id="resultMap" type="com.unicom.entity.User">
+		<id column="user_id" property="userId" />
+		<result column="user_name" property="userName" />
+		<result column="email" property="email" />
+		<result column="phone" property="phone" />
+		<result column="address" property="address" />
+		<result column="age" property="age" />
+	</resultMap>
+	<sql id="Column_List">
+		user_id,user_name,email,phone,address,age
+	</sql>
+	<select id="selectUserById" resultMap="resultMap">
+		select
+		<include refid="Column_List" />
+		from t_user
+		where user_id = #{userId}
+	</select>
+	<select id="selectUserList" resultMap="resultMap">
+		select
+		<include refid="Column_List" />
+		from t_user
+		<where>
+			<if test="pager.f.userName != null and pager.f.userName!='' ">
+				and user_name like CONCAT('%',#{pager.f.userName},'%')
+			</if>
+			<if test="pager.f.email != null and pager.f.email != '' ">
+				and email = #{pager.f.email}
+			</if>
+			<if test="pager.f.phone != null and pager.f.phone != '' ">
+				and phone = #{pager.f.phone}
+			</if>
+			<if test="pager.f.address != null and pager.f.address != '' ">
+				and address like CONCAT('%', #{pager.f.address}, '%')
+			</if>
+			<if test="pager.f.age != null and pager.f.age != '' ">
+				and age = #{pager.f.age}
+			</if>
+		</where>
+		<if test="pager.o.field != null and pager.o.field != '' ">
+			ORDER BY ${pager.o.field} ${pager.o.sort}
+
+		</if>
+		<if test="pager.pageFlag != null and pager.pageFlag == 'pageFlag'">
+			LIMIT #{pager.beginCount},#{pager.pageRows}
+		</if>
+
+	</select>
+	<select id="selectCount" resultType="int">
+		select
+		count(user_id)
+		from t_user
+		<where>
+			<if test="f.userName != null and f.userName!='' ">
+				and user_name like CONCAT('%',#{f.userName},'%')
+			</if>
+			<if test="f.email != null and f.email != '' ">
+				and email = #{f.email}
+			</if>
+			<if test="f.phone != null and f.phone != '' ">
+				and phone = #{f.phone}
+			</if>
+			<if test="f.address != null and f.address != '' ">
+				and address like CONCAT('%', #{f.address}, '%')
+			</if>
+			<if test="f.age != null and f.age != '' ">
+				and age = #{f.age}
+			</if>
+		</where>
+	</select>
+
+</mapper>

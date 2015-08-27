@@ -1,0 +1,83 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<TITLE>FusionCharts Free - Client Side Chart Plotting</TITLE>	
+	<style type="text/css">
+	<!--
+	body {
+		font-family: Arial, Helvetica, sans-serif;
+		font-size: 12px;
+	}
+	-->
+	</style>
+	<SCRIPT LANGUAGE="Javascript" SRC="../js/FusionCharts.js"></SCRIPT>
+	<SCRIPT LANGUAGE="Javascript" SRC="../js/jquery-1.4.4.min.js"></SCRIPT>
+	
+	<SCRIPT LANGUAGE="JavaScript">
+		var templatePath="";
+		
+		/**
+		 * generateXML method returns the XML data for the chart based on the
+		 * checkboxes which the user has checked.
+		 *	@param	animate		Boolean value indicating to  animate the chart.
+		 *	@return				XML Data for the entire chart.
+		*/		
+		function generateXML(){			
+			//Variable to store XML
+			var strXML="";
+			
+			strXML = "<graph showNames='1'  decimalPrecision='0'  >"+
+			"   <set name='USA' value='20'/>"+
+			"	<set name='France' value='7'  />"+
+			"    <set name='India' value='12' />"+
+			"    <set name='England' value='11' />"+
+			"	<set name='Italy' value='8' />"+
+			"    <set name='Canada' value='19'/>"+
+			"    <set name='Germany' value='15'/>"+
+			"</graph>";
+			//Return data
+			return strXML;
+		}
+		
+		function report (){
+			var chart1 = new FusionCharts(templatePath, "chart1Id", "600", "400");		   
+			//Initialize graph with chart data returned by generateXML() function. [ note: the parameter 'this.document.productSelector.AnimateChart.checked' is passed to set animation property of the chart]
+			//loading XML data into variable strXML 
+			var strXML=generateXML();
+			chart1.setDataXML(strXML);
+			chart1.render("TopEmployeesDiv");
+			
+		}
+		
+	</SCRIPT>
+</HEAD>
+<BODY>
+	<!-- START Script Block for Chart TopEmployees -->
+	<div id='TopEmployeesDiv' align='center'>
+		Chart.
+	</div>
+
+		
+		<script language="JavaScript">					
+		$(function() {
+		    // The url for our json data
+		    var jsonurl = "/report/AjaxServlet2";
+
+		    $.ajax({
+		        async: false,
+		        url: jsonurl,
+		        dataType: "json",
+		        success: function(msg) {
+					templatePath="./swf/FCF_Doughnut2D.swf";
+		            report();           
+				},
+				error : function() {
+				}
+			});
+
+		});
+		</script>
+		<BR />
+	
+</BODY>
+</HTML>

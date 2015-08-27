@@ -1,0 +1,89 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<TITLE>FusionCharts Free - Client Side Chart Plotting</TITLE>	
+	<style type="text/css">
+	<!--
+	body {
+		font-family: Arial, Helvetica, sans-serif;
+		font-size: 12px;
+	}
+	-->
+	</style>
+	<SCRIPT LANGUAGE="Javascript" SRC="../js/FusionCharts.js"></SCRIPT>
+	<SCRIPT LANGUAGE="Javascript" SRC="../js/jquery-1.4.4.min.js"></SCRIPT>
+	
+	<SCRIPT LANGUAGE="JavaScript">
+		var templatePath="";
+		
+		/**
+		 * generateXML method returns the XML data for the chart based on the
+		 * checkboxes which the user has checked.
+		 *	@param	animate		Boolean value indicating to  animate the chart.
+		 *	@return				XML Data for the entire chart.
+		*/		
+		function generateXML(){			
+			//Variable to store XML
+			var strXML="";
+			
+			strXML = "<graph caption='Monthly Unit Sales' xAxisName='Month' yAxisName='Units' decimalPrecision='0' "+
+			"formatNumberScale='0' chartRightMargin='30'>"+
+			"<set name='Jan' value='462' color='B8D288' />"+
+			"<set name='Feb' value='857' color='B8D288' />"+
+			"<set name='Mar' value='671' color='B8D288' />"+
+			"<set name='Apr' value='494' color='B8D288'/>"+
+			"<set name='May' value='761' color='B8D288'/>"+
+			"<set name='Jun' value='960' color='B8D288'/>"+
+			"<set name='Jul' value='629' color='B8D288'/>"+
+			"<set name='Aug' value='622' color='B8D288'/>"+
+			"<set name='Sep' value='376' color='B8D288'/>"+
+			"<set name='Oct' value='494' color='B8D288'/>"+
+			"<set name='Nov' value='761' color='B8D288'/>"+
+			"<set name='Dec' value='960' color='B8D288'/>"+
+			"</graph>";
+			//Return data
+			return strXML;
+		}
+		
+		function report (){
+			var chart1 = new FusionCharts(templatePath, "chart1Id", "600", "400");		   
+			//Initialize graph with chart data returned by generateXML() function. [ note: the parameter 'this.document.productSelector.AnimateChart.checked' is passed to set animation property of the chart]
+			//loading XML data into variable strXML 
+			var strXML=generateXML();
+			chart1.setDataXML(strXML);
+			chart1.render("TopEmployeesDiv");
+			
+		}
+		
+	</SCRIPT>
+</HEAD>
+<BODY>
+	<!-- START Script Block for Chart TopEmployees -->
+	<div id='TopEmployeesDiv' align='center'>
+		Chart.
+	</div>
+
+		
+		<script language="JavaScript">					
+		$(function() {
+		    // The url for our json data
+		    var jsonurl = "/report/AjaxServlet2";
+
+		    $.ajax({
+		        async: false,
+		        url: jsonurl,
+		        dataType: "json",
+		        success: function(msg) {
+					templatePath="./swf/FCF_Bar2D.swf";
+		            report();           
+				},
+				error : function() {
+				}
+			});
+
+		});
+		</script>
+		<BR />
+	
+</BODY>
+</HTML>

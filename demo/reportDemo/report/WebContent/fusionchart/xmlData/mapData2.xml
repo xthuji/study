@@ -1,0 +1,43 @@
+<map imageSave='1' imageSaveURL='Resources/FCExporter.aspx' exposeHoverEvent='1' includeValueInLabels='1' showShadow='0' showBevel='0' animation='0' borderColor='FFFFFF' showCanvasBorder='0' hoverColor='dfdfdf' >
+<colorRange>
+	<color minValue='0' maxValue='1' displayValue='A' color='CC0001' />
+    <color minValue='1' maxValue='2' displayValue='B' color='FFCC33' />
+    <color minValue='2' maxValue='3' displayValue='C' color='069F06' />
+</colorRange> 
+<data> 
+    <entity id="CN.BJ" value="2" link="j-LinkMap-Beijing" />  
+    <entity id="CN.TJ" value="2" link="j-LinkMap-Tianjin" />
+    <entity id="CN.CQ" value="2" link="j-LinkMap-Chongqing" />
+    <entity id="CN.SH" value="2" link="j-LinkMap-Shanghai" />
+    <entity id="CN.HB" value="1" link="j-LinkMap-Hebei" />
+    <entity id="CN.SX" value="1" link="j-LinkMap-Shanxi" />
+    <entity id="CN.LN" value="1" link="j-LinkMap-Liaoning" />
+    <entity id="CN.JL" value="1" link="j-LinkMap-Jilin" />
+    <entity id="CN.HL" value="1" link="j-LinkMap-Heilongjiang" />
+    <entity id="CN.JS" value="0" link="j-LinkMap-Jiangsu" />
+    <entity id="CN.ZJ" value="2" link="j-LinkMap-Zhejiang" />
+    <entity id="CN.AH" value="1" link="j-LinkMap-Anhui" />
+    <entity id="CN.FJ" value="2" link="j-LinkMap-Fujian" />
+    <entity id="CN.JX" value="1" link="j-LinkMap-Jiangxi" />
+    <entity id="CN.SD" value="2" link="j-LinkMap-Shandong" />
+    <entity id="CN.HE" value="1" link="j-LinkMap-Henan" />
+    <entity id="CN.HU" value="2" link="j-LinkMap-Hubei" />
+    <entity id="CN.HN" value="2" link="j-LinkMap-Hunan" />
+    <entity id="CN.GD" value="2" link="j-LinkMap-Guangdong" />
+    <entity id="CN.HA" value="1" link="j-LinkMap-Hainan" />
+    <entity id="CN.SC" value="1" link="j-LinkMap-Sichuan" />
+    <entity id="CN.GZ" value="1" link="j-LinkMap-Guizhou" />
+    <entity id="CN.YN" value="1" link="j-LinkMap-Yunnan" />
+    <entity id="CN.SA" value="1" link="j-LinkMap-Shaanxi" />
+    <entity id="CN.GS" value="2" link="j-LinkMap-Gansu" />
+    <entity id="CN.QH" value="2" link="j-LinkMap-Qinghai" />
+    <entity id="CN.TA" value="2" link="j-LinkMap-Taiwan" />
+    <entity id="CN.NM" value="2" link="j-LinkMap-NeiMongol" />
+    <entity id="CN.GX" value="1" link="j-LinkMap-Guangxi" />
+    <entity id="CN.NX" value="1" link="j-LinkMap-NingxiaHui" />
+    <entity id="CN.XJ" value="1" link="j-LinkMap-Xinjiang" />
+    <entity id="CN.XZ" value="1" link="j-LinkMap-Tibet" />
+    <entity id="CN.HK" value="1" link="j-LinkMap-HongKong" />
+    <entity id="CN.MA" value="2" link="j-LinkMap-Macao" />
+  </data>
+</map>

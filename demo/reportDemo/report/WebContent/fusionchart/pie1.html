@@ -1,0 +1,119 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<TITLE>FusionCharts Free - Client Side Chart Plotting</TITLE>	
+	<style type="text/css">
+	</style>
+	<link rel="stylesheet" type="text/css" href="http://www.fusioncharts.com/goodies/fusioncharts-free/demos/blueprint/Style.css" />
+	<SCRIPT LANGUAGE="Javascript" SRC="../js/FusionCharts.js"></SCRIPT>
+	<SCRIPT LANGUAGE="Javascript" SRC="../js/jquery-1.4.4.min.js"></SCRIPT>
+	
+	<SCRIPT LANGUAGE="JavaScript">
+		//Data for each product
+		var data = new Array();
+		
+		var templatePath="";
+		
+		/**
+		 * generateXML method returns the XML data for the chart based on the
+		 * checkboxes which the user has checked.
+		 *	@param	animate		Boolean value indicating to  animate the chart.
+		 *	@return				XML Data for the entire chart.
+		*/		
+		function generateXML(){			
+			//Variable to store XML
+			var strXML="";
+			strXML = "<graph  xAxisName='Employee' shownames='1' showvalues='1' showLegend='1' formatNumberScale='1' formatNumber='1' numberPrefix='$' pieRadius='150' pieYScale='60'  caption='Sales Per  Employee in 1996'  decimalPrecision='2'  chartLeftMargin='0' chartRightMargin='0' chartTopMargin='0' >";
+			$.each(data, function(index, value) {
+				strXML = strXML + "<set name='"+data[index][0]+"' value='"+data[index][1]+"' color='"+data[index][2]+"' />";
+	        });
+			strXML = strXML + "</graph>";
+			//Return data
+			return strXML;
+		}
+		
+		function report (){
+			var chart1 = new FusionCharts(templatePath, "chart1Id", "600", "400");		   
+			//Initialize graph with chart data returned by generateXML() function. [ note: the parameter 'this.document.productSelector.AnimateChart.checked' is passed to set animation property of the chart]
+			//loading XML data into variable strXML 
+			var strXML=generateXML();
+			chart1.setDataXML(strXML);
+			chart1.render("mychart");
+			writeColorTable();
+		}
+		
+		function writeColorTable(){
+			var colorTableStr = "";
+			var size = data.length;
+			colorTableStr = "<tr><td colspan="+size+" height='2' class='gridBorderBottom gridNoFont'>&nbsp;</td></tr>";
+			$.each(data, function(index, value) {
+				colorTableStr = colorTableStr + 
+					"<TR><td class='text gridLightStrip'>&nbsp;</td><TD valign='middle' align='center' width='15' height='10px'class='gridLightStrip'>"+
+					"<div class='gridColorDIV' style='background-color: "+data[index][2]+";'>&nbsp;</div></td>"+
+					"<td class='text gridLightStrip'>时间："+data[index][0]+"</td>"+
+					"<td align='right' class='text gridLightStrip'>消费金额："+data[index][1]+"</td><td class='text gridLightStrip'>&nbsp;</td></TR>";
+	        });
+			colorTableStr = colorTableStr+"<tr><td colspan="+size+">&nbsp;</td></tr>";
+			$("#colorTable").html(colorTableStr);
+		}
+		
+	</SCRIPT>
+</HEAD>
+<BODY>
+<table width="1%" border="0" cellpadding="2" cellspacing="0" class="lightYellowBorderTable">
+	<tr> 
+	  <td class="lightYellowTr" height="25px"><div align="center"><span class="headingtable">Employee Sales for 1996</span></div></td>
+	</tr>
+	<tr> 
+		<td align="center" valign="middle" > 
+			
+	<!-- START Script Block for Chart TopEmployees -->
+	<div id='mychart' align='center'>
+		Chart.
+	</div>
+	  </td>
+	</tr>
+	<tr>
+		<td valign="middle">
+			<center>
+					<table id="colorTable" width='98%' border='0' cellpadding='2' cellspacing='0'>
+					</table>
+				</center>
+			</td>
+	</tr>
+</table>
+
+		
+	<script language="JavaScript">					
+		$(function() {
+		    // The url for our json data
+		    var jsonurl = "/report/AjaxServlet";
+
+		    $.ajax({
+		        async: false,
+		        url: jsonurl,
+		        dataType: "json",
+		        success: function(msg) {
+		            data = new Array(); //数据  
+		        	var colorList = new Array("#AFD8F8","#FF0000","#F6BD0F","#8BBA00","#A66EDD","#F984A1","#CCCC00","#999999","#0099CC","#d8b83f","#0085cc","#ff5800","958c12");
+					templatePath="./swf/FCF_Pie3D.swf";
+					$(msg).each(function (index, value) {
+			            var dataValue = new Array(); //数据  
+					    var vdate = eval(msg[index]);
+			           	dataValue.push(vdate.YearMonth);  
+			           	dataValue.push(vdate.Consume);  
+			           	dataValue.push(colorList[index]);  
+				        data.push(dataValue);  
+			        });   
+					report();           
+				},
+				error : function() {
+				}
+			});
+
+		});
+	</script>
+	<BR />
+	
+</BODY>
+</HTML>

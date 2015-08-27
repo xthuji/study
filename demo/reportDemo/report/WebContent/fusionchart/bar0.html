@@ -1,0 +1,94 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<TITLE>FusionCharts Free - Client Side Chart Plotting</TITLE>	
+	<style type="text/css">
+	<!--
+	body {
+		font-family: Arial, Helvetica, sans-serif;
+		font-size: 12px;
+	}
+	-->
+	</style>
+	<SCRIPT LANGUAGE="Javascript" SRC="../js/FusionCharts.js"></SCRIPT>
+	<SCRIPT LANGUAGE="Javascript" SRC="../js/jquery-1.4.4.min.js"></SCRIPT>
+	
+	<SCRIPT LANGUAGE="JavaScript">
+		var templatePath="";
+		
+		/**
+		 * generateXML method returns the XML data for the chart based on the
+		 * checkboxes which the user has checked.
+		 *	@param	animate		Boolean value indicating to  animate the chart.
+		 *	@return				XML Data for the entire chart.
+		*/		
+		function generateXML(){			
+			//Variable to store XML
+			var strXML="";
+			
+			strXML = "<graph caption='Business Results: 2005' yaxisname='Revenue (Millions)' hovercapbg='FFFFFF' divLineColor='999999' divLineAlpha='80' numdivlines='5' decimalPrecision='0' numberPrefix='$' numberSuffix='M' >   "+
+			"	<categories>                                              "+
+			"		<category name='Hardware'/>                           "+
+			"		<category name='Software' />                          "+
+			"		<category name='Service' />                           "+
+			"                                                             "+
+			"	</categories>                                             "+
+			"	<dataset seriesname='Domestic' color='839F2F'>            "+
+			"		<set value='84' />                                    "+
+			"		<set value='207' />                                   "+
+			"		<set value='116' />                                   "+
+			"	</dataset>                                                "+
+			"                                                             "+
+			"	<dataset seriesname='International' color='56B9F9' >      "+
+			"		<set value='116' />                                   "+
+			"		<set value='237' />                                   "+
+			"		<set value='83' />                                    "+
+			"	</dataset>                                                "+
+			"</graph>                                                     "+
+			"                                                             ";
+			//Return data
+			return strXML;
+		}
+		
+		function report (){
+			var chart1 = new FusionCharts(templatePath, "chart1Id", "600", "400");		   
+			//Initialize graph with chart data returned by generateXML() function. [ note: the parameter 'this.document.productSelector.AnimateChart.checked' is passed to set animation property of the chart]
+			//loading XML data into variable strXML 
+			var strXML=generateXML();
+			chart1.setDataXML(strXML);
+			chart1.render("TopEmployeesDiv");
+			
+		}
+		
+	</SCRIPT>
+</HEAD>
+<BODY>
+	<!-- START Script Block for Chart TopEmployees -->
+	<div id='TopEmployeesDiv' align='center'>
+		Chart.
+	</div>
+
+		
+		<script language="JavaScript">					
+		$(function() {
+		    // The url for our json data
+		    var jsonurl = "/report/AjaxServlet2";
+
+		    $.ajax({
+		        async: false,
+		        url: jsonurl,
+		        dataType: "json",
+		        success: function(msg) {
+					templatePath="./swf/FCF_MSBar2D.swf";
+		            report();           
+				},
+				error : function() {
+				}
+			});
+
+		});
+		</script>
+		<BR />
+	
+</BODY>
+</HTML>

@@ -1,0 +1,147 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<TITLE>FusionCharts Free - Client Side Chart Plotting</TITLE>	
+	<style type="text/css">
+	<!--
+	body {
+		font-family: Arial, Helvetica, sans-serif;
+		font-size: 12px;
+	}
+	-->
+	</style>
+	<SCRIPT LANGUAGE="Javascript" SRC="../js/FusionCharts.js"></SCRIPT>
+	<SCRIPT LANGUAGE="Javascript" SRC="../js/jquery-1.4.4.min.js"></SCRIPT>
+	
+	<SCRIPT LANGUAGE="JavaScript">
+		var servleturl = "/report/AjaxServlet5";
+		var templatePath="./swf/map/FCMap_China2.swf";
+        // 地图名称数据（全国地图跳省份地图时，从中取得中文名称）
+        var mapData = new Array();
+        //生成全国省份地图xml数据
+        function generateProvinceXML(jsonData){         
+            //Variable to store XML
+            var strXML="<map fillAlpha='70' caption=\"全国月常规总流量地图\" showShadow='0' showBevel='0' canvasBorderColor=\"DCBB7C\" formatNumberScale='0' borderColor=\"DECB87\" fillColor=\"FDFAEE\" baseFontColor=\"61491A\" connectorColor=\"61491A\" hoverColor=\"E7CB99\" toolTipBorderColor=\"DCBB7C\" toolTipBgColor=\"FFFFFF\" imageSave=\"1\" exportEnabled='0' exportAtClient='1' exportHandler='fcExporter1' numberPrefix='月总流量' numberSuffix=\"MB\" showAboutMenuItem='0' exportFormats='JPG=保存为JPEG图片|PNG=保存为PNG图片|PDF=保存为PDF'>";
+            var colorRangeStr = "<colorRange>"+
+            "<color minValue='2' maxValue='100' displayValue='省月总流量&gt;2PB' color='FF0033' />"+
+            "<color minValue='0.7' maxValue='2' displayValue='省月总流量0.7P-2PB' color='FFCC33' />"+
+            "<color minValue='0.5' maxValue='0.7' displayValue='省月总流量0.5P-0.69PB' color='3399CC' />"+
+            "<color minValue='0.3' maxValue='0.5' displayValue='省月总流量0.3-0.49PB' color='069F06' />"+
+            "<color minValue='0' maxValue='0.3' displayValue='省月总流量&lt;0.3PB' color='808080' />"+
+            "</colorRange>";  
+            
+            var dataStr = "<data> ";
+            mapData = new Array();
+            for (var index=0; index<jsonData.length; index++){
+                dataStr = dataStr + "<entity id=\""+jsonData[index].mapID+"\" displayValue=\""+jsonData[index].cnName
+                				+"\" toolText=\""+jsonData[index].cnName+";月总流量："+jsonData[index].value+"PB"
+                				+"\" value=\""+jsonData[index].value+"\" link=\"j-LinkMap-"+jsonData[index].swfName+"\" />  ";
+           		var areaArray = new Array();
+           		areaArray.push(jsonData[index].swfName);
+           		areaArray.push(jsonData[index].cnName);
+           		areaArray.push(jsonData[index].codeID);
+           		mapData.push(areaArray);
+            }
+            dataStr = dataStr + "</data>";
+            strXML = strXML + colorRangeStr + dataStr + "</map>";
+            //Return data
+            return strXML;
+        }
+        //生成全省城市地图xml数据
+        function generateCityData(jsonData,provinceName){         
+            //Variable to store XML
+            var strXML="<map fillAlpha='70' caption=\""+provinceName+"省月常规总流量地图\" showShadow='0' showBevel='0' canvasBorderColor=\"DCBB7C\" formatNumberScale='0' borderColor=\"DECB87\" fillColor=\"FDFAEE\" baseFontColor=\"61491A\" connectorColor=\"61491A\" hoverColor=\"E7CB99\" toolTipBorderColor=\"DCBB7C\" toolTipBgColor=\"FFFFFF\" imageSave=\"1\" exportEnabled='0' exportAtClient='1' exportHandler='fcExporter2' numberPrefix='月总流量' numberSuffix=\"MB\" showAboutMenuItem='0' exportFormats='JPG=保存为JPEG图片|PNG=保存为PNG图片|PDF=保存为PDF'>";
+            var colorRangeStr = "<colorRange>"+
+            "<color minValue='0' maxValue='1' displayValue='A' color='FF0033' />"+
+            "<color minValue='1' maxValue='3' displayValue='B' color='FFCC33' />"+
+            "<color minValue='3' maxValue='6' displayValue='C' color='3399CC' />"+
+            "<color minValue='6' maxValue='10' displayValue='D' color='069F06' />"+
+            "<color minValue='10' maxValue='100' displayValue='E' color='808080' />"+
+            "</colorRange>";  
+            
+            var dataStr = "<data> ";
+            for (var index=0; index<jsonData.length; index++){
+                dataStr = dataStr + "<entity id=\""+jsonData[index].mapID+"\" displayValue=\""+jsonData[index].cnName
+                				+"\" toolText=\""+jsonData[index].cnName+";月总流量："+jsonData[index].value+"MB"
+                				+"\" value=\""+jsonData[index].sortNum+"\" link=\"JavaScript:LinkList('"+jsonData[index].swfName+"')\" />  ";
+            }
+            dataStr = dataStr + "</data>";
+            strXML = strXML + colorRangeStr + dataStr + "</map>";
+            //Return data
+            return strXML;
+        }
+        //跳转到城市数据列表
+        function LinkList(city) {
+            //alert("跳转到city数据页面");
+        }
+        //跳转到省份地图
+        function LinkMap(st_id) {
+            var province = st_id;
+            var provinceName = "";
+            var provinceCode = "";
+            for (var index=0; index<mapData.length; index++){
+            	if(mapData[index][0]==province){
+            		provinceName = mapData[index][1];
+            		provinceCode = mapData[index][2];
+            	}
+            }
+            var template = "./swf/map/FCMap_"+province+".swf";
+            
+            FusionCharts('China').dispose();
+            
+            var jsonurl = servleturl+"?area="+provinceCode;
+            var datas ;
+            $.ajax({
+                async: false,
+                url: jsonurl,
+                dataType: "json",
+                success: function(msg) {
+                    datas = msg ;           
+                },
+                error : function() {
+                }
+            });
+            
+            var chart = new FusionCharts(template,"province","800","600","0","1");
+            //Initialize graph with chart data returned by generateXML() function. [ note: the parameter 'this.document.productSelector.AnimateChart.checked' is passed to set animation property of the chart]
+            //loading XML data into variable strXML 
+            var strXML=generateCityData(datas,provinceName);
+            chart.setDataXML(strXML);
+            chart.render("ChinaMap");
+        }
+        //展示全国流量地图
+        function report (msg){
+            var chart1 = new FusionCharts(templatePath,"China","800","600","0","1");
+            //Initialize graph with chart data returned by generateXML() function. [ note: the parameter 'this.document.productSelector.AnimateChart.checked' is passed to set animation property of the chart]
+            //loading XML data into variable strXML 
+            var strXML=generateProvinceXML(msg);
+            chart1.setDataXML(strXML);
+            chart1.render("ChinaMap");
+        }
+        
+    </SCRIPT>
+</HEAD>
+<BODY>
+	<!-- START Script Block for Chart TopEmployees -->
+	<div id='ChinaMap' align='center'>
+		Chart.
+	</div>
+
+		<script language="JavaScript">					
+		$(function() {
+            $.ajax({
+                async: false,
+                url: servleturl+"?isChina=1",
+                dataType: "json",
+                success: function(msg) {
+                    report(msg);           
+                },
+                error : function() {
+                }
+            });
+        });
+		</script>
+		<BR />
+	
+</BODY>
+</HTML>

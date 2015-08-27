@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<decorators defaultdir="/WEB-INF/decorators">
+	<!-- <excludes> <pattern>/web.stationAd/admin/test/warningline/download.j</pattern> 
+		</excludes> -->
+	<excludes>
+		<pattern>*Ajax.do</pattern>
+	</excludes>
+</decorators>

@@ -1,0 +1,43 @@
+<map fillAlpha='70' canvasBorderColor="DCBB7C" borderColor="DECB87" fillColor="FDFAEE" baseFontColor="61491A" connectorColor="61491A" hoverColor="E7CB99" toolTipBorderColor="DCBB7C" toolTipBgColor="FFFFFF" imageSave="1" imageSaveURL="Resources/FCExporter.aspx" numberPrefix='$'>
+<colorRange>
+	<color minValue='0' maxValue='1' displayValue='A' color='CC0001' />
+    <color minValue='1' maxValue='2' displayValue='B' color='FFCC33' />
+    <color minValue='2' maxValue='3' displayValue='C' color='069F06' />
+</colorRange> 
+<data> 
+    <entity id="CN.BJ" value="2" link="http://www.baidu.com" />  
+    <entity id="CN.TJ" value="2" link="http://www.baidu.com" />
+    <entity id="CN.CQ" value="2" link="http://www.baidu.com" />
+    <entity id="CN.SH" value="2" link="http://www.baidu.com" />
+    <entity id="CN.HB" value="1" link="http://www.baidu.com" />
+    <entity id="CN.SX" value="1" link="http://www.baidu.com" />
+    <entity id="CN.LN" value="1" link="http://www.baidu.com" />
+    <entity id="CN.JL" value="1" link="http://www.baidu.com" />
+    <entity id="CN.HL" value="1" link="http://www.baidu.com" />
+    <entity id="CN.JS" value="0" link="http://www.baidu.com" />
+    <entity id="CN.ZJ" value="2" link="http://www.baidu.com" />
+    <entity id="CN.AH" value="1" link="http://www.baidu.com" />
+    <entity id="CN.FJ" value="2" link="http://www.baidu.com" />
+    <entity id="CN.JX" value="1" link="http://www.baidu.com" />
+    <entity id="CN.SD" value="2" link="http://www.baidu.com" />
+    <entity id="CN.HE" value="1" link="http://www.baidu.com" />
+    <entity id="CN.HU" value="2" link="http://www.baidu.com" />
+    <entity id="CN.HN" value="2" link="http://www.baidu.com" />
+    <entity id="CN.GD" value="2" link="http://www.baidu.com" />
+    <entity id="CN.HA" value="1" link="http://www.baidu.com" />
+    <entity id="CN.SC" value="1" link="http://www.baidu.com" />
+    <entity id="CN.GZ" value="1" link="http://www.baidu.com" />
+    <entity id="CN.YN" value="1" link="http://www.baidu.com" />
+    <entity id="CN.SA" value="1" link="http://www.baidu.com" />
+    <entity id="CN.GS" value="2" link="http://www.baidu.com" />
+    <entity id="CN.QH" value="2" link="http://www.baidu.com" />
+    <entity id="CN.TA" value="2" link="http://www.baidu.com" />
+    <entity id="CN.NM" value="2" link="http://www.baidu.com" />
+    <entity id="CN.GX" value="1" link="http://www.baidu.com" />
+    <entity id="CN.NX" value="1" link="http://www.baidu.com" />
+    <entity id="CN.XJ" value="1" link="http://www.baidu.com" />
+    <entity id="CN.XZ" value="1" link="http://www.baidu.com" />
+    <entity id="CN.HK" value="1" link="http://www.baidu.com" />
+    <entity id="CN.MA" value="2" link="http://www.baidu.com" />
+  </data>
+</map>

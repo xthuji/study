@@ -1,0 +1,2 @@
+FusionChartsFree.zip
+是官方的例子和说明，解压后访问index.html查看

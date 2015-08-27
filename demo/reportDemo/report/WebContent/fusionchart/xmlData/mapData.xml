@@ -1,0 +1,60 @@
+<map imageSave="1" imageSaveURL="Resources/FusionChartsSave.aspx" exposeHoverEvent="1" includeValueInLabels="1" showShadow="0" showBevel="0" animation="0" borderColor="FFFFFF" showCanvasBorder="0" hoverColor="dfdfdf" legendPosition="BOTTOM"> 
+  <colorRange> 
+    <color minValue="0" maxvalue="1" color="DBEAF3" displayValue="Unalloted"/>  
+    <color minValue="1" maxvalue="2" color="1E61D1" displayValue="Obama"/>  
+    <color minValue="2" maxvalue="3" color="CC0000" displayValue="Romney"/> 
+  </colorRange>  
+  <data> 
+    <entity id="AL" value="2" displayValue="AL 9" tooltext="Alabama(9)" link="Javascript:activeState(&quot;AL&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="AK" value="2" displayValue="AK 3" tooltext="Alaska(3)" link="Javascript:activeState(&quot;AK&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="AZ" value="2" displayValue="AZ 11" tooltext="Arizona(11)" link="Javascript:activeState(&quot;AZ&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="AR" value="2" displayValue="AR 6" tooltext="Arkansas(6)" link="Javascript:activeState(&quot;AR&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="CA" value="1" displayValue="CA 55" tooltext="California(55)" link="Javascript:activeState(&quot;CA&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="CO" value="1" displayValue="CO 9" tooltext="Colorado(9)" link="Javascript:activeState(&quot;CO&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="CT" value="1" displayValue="CT 7" tooltext="Connecticut(7)" link="Javascript:activeState(&quot;CT&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="DC" value="1" displayValue="DC 3" tooltext="District of Columbia(3)" link="Javascript:activeState(&quot;DC&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="DE" value="1" displayValue="DE 3" tooltext="Delaware(3)" link="Javascript:activeState(&quot;DE&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="FL" value="0" displayValue="FL 29" tooltext="Florida(29)" link="Javascript:activeState(&quot;FL&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="GA" value="2" displayValue="GA 16" tooltext="Georgia(16)" link="Javascript:activeState(&quot;GA&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="HI" value="1" displayValue="HI 4" tooltext="Hawaii(4)" link="Javascript:activeState(&quot;HI&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="ID" value="2" displayValue="ID 4" tooltext="Idaho(4)" link="Javascript:activeState(&quot;ID&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="IL" value="1" displayValue="IL 20" tooltext="Illinois(20)" link="Javascript:activeState(&quot;IL&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="IN" value="2" displayValue="IN 11" tooltext="Indiana(11)" link="Javascript:activeState(&quot;IN&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="IA" value="1" displayValue="IA 6" tooltext="Iowa(6)" link="Javascript:activeState(&quot;IA&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="KS" value="2" displayValue="KS 6" tooltext="Kansas(6)" link="Javascript:activeState(&quot;KS&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="KY" value="2" displayValue="KY 8" tooltext="Kentucky(8)" link="Javascript:activeState(&quot;KY&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="LA" value="2" displayValue="LA 8" tooltext="Louisiana(8)" link="Javascript:activeState(&quot;LA&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="ME" value="1" displayValue="ME 4" tooltext="Maine(4)" link="Javascript:activeState(&quot;ME&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="MD" value="1" displayValue="MD 10" tooltext="Maryland(10)" link="Javascript:activeState(&quot;MD&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="MA" value="1" displayValue="MA 11" tooltext="Massachusetts(11)" link="Javascript:activeState(&quot;MA&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="MI" value="1" displayValue="MI 16" tooltext="Michigan(16)" link="Javascript:activeState(&quot;MI&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="MN" value="1" displayValue="MN 10" tooltext="Minnesota(10)" link="Javascript:activeState(&quot;MN&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="MS" value="2" displayValue="MS 6" tooltext="Mississippi(6)" link="Javascript:activeState(&quot;MS&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="MO" value="2" displayValue="MO 10" tooltext="Missouri(10)" link="Javascript:activeState(&quot;MO&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="MT" value="2" displayValue="MT 3" tooltext="Montana(3)" link="Javascript:activeState(&quot;MT&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="NE" value="2" displayValue="NE 3" tooltext="Nebraska(3)" link="Javascript:activeState(&quot;NE&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="NV" value="1" displayValue="NV 6" tooltext="Nevada(6)" link="Javascript:activeState(&quot;NV&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="NH" value="1" displayValue="NH 4" tooltext="New Hampshire(4)" link="Javascript:activeState(&quot;NH&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="NJ" value="1" displayValue="NJ 14" tooltext="New Jersey(14)" link="Javascript:activeState(&quot;NJ&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="NM" value="1" displayValue="NM 5" tooltext="New Mexico(5)" link="Javascript:activeState(&quot;NM&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="NY" value="1" displayValue="NY 29" tooltext="New York(29)" link="Javascript:activeState(&quot;NY&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="NC" value="2" displayValue="NC 15" tooltext="North Carolina(15)" link="Javascript:activeState(&quot;NC&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="ND" value="2" displayValue="ND 3" tooltext="North Dakota(3)" link="Javascript:activeState(&quot;ND&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="OH" value="1" displayValue="OH 18" tooltext="Ohio(18)" link="Javascript:activeState(&quot;OH&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="OK" value="2" displayValue="OK 7" tooltext="Oklahoma(7)" link="Javascript:activeState(&quot;OK&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="OR" value="1" displayValue="OR 7" tooltext="Oregon(7)" link="Javascript:activeState(&quot;OR&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="PA" value="1" displayValue="PA 20" tooltext="Pennsylvania(20)" link="Javascript:activeState(&quot;PA&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="RI" value="1" displayValue="RI 4" tooltext="Rhode Island(4)" link="Javascript:activeState(&quot;RI&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="SC" value="2" displayValue="SC 9" tooltext="South Carolina(9)" link="Javascript:activeState(&quot;SC&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="SD" value="2" displayValue="SD 3" tooltext="South Dakota(3)" link="Javascript:activeState(&quot;SD&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="TN" value="2" displayValue="TN 11" tooltext="Tennessee(11)" link="Javascript:activeState(&quot;TN&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="TX" value="2" displayValue="TX 38" tooltext="Texas(38)" link="Javascript:activeState(&quot;TX&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="UT" value="2" displayValue="UT 6" tooltext="Utah(6)" link="Javascript:activeState(&quot;UT&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="VT" value="1" displayValue="VT 3" tooltext="Vermont(3)" link="Javascript:activeState(&quot;VT&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="VA" value="1" displayValue="VA 13" tooltext="Virginia(13)" link="Javascript:activeState(&quot;VA&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="WA" value="1" displayValue="WA 15" tooltext="Washington(15)" link="Javascript:activeState(&quot;WA&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="WV" value="2" displayValue="WV 5" tooltext="West Virginia(5)" link="Javascript:activeState(&quot;WV&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="WI" value="1" displayValue="WI 10" tooltext="Wisconsin(10)" link="Javascript:activeState(&quot;WI&quot;);" font="tahoma" fontSize="10" fontBold="1"/>  
+    <entity id="WY" value="2" displayValue="WY 3" tooltext="Wyoming(3)" link="Javascript:activeState(&quot;WY&quot;);" font="tahoma" fontSize="10" fontBold="1"/> 
+  </data> 
+</map>

@@ -1,0 +1,90 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<TITLE>FusionCharts Free - Client Side Chart Plotting</TITLE>	
+	<style type="text/css">
+	<!--
+	body {
+		font-family: Arial, Helvetica, sans-serif;
+		font-size: 12px;
+	}
+	-->
+	</style>
+	<SCRIPT LANGUAGE="Javascript" SRC="../js/FusionCharts.js"></SCRIPT>
+	<SCRIPT LANGUAGE="Javascript" SRC="../js/jquery-1.4.4.min.js"></SCRIPT>
+	
+	<SCRIPT LANGUAGE="JavaScript">
+		var templatePath="";
+		
+		/**
+		 * generateXML method returns the XML data for the chart based on the
+		 * checkboxes which the user has checked.
+		 *	@param	animate		Boolean value indicating to  animate the chart.
+		 *	@return				XML Data for the entire chart.
+		*/		
+		function generateXML(){			
+			//Variable to store XML
+			var strXML="";
+			
+			strXML = "<graph  xAxisName='Employee' shownames='1' showvalues='1' showLegend='1' formatNumberScale='1' formatNumber='1' numberPrefix='$' pieRadius='150' pieYScale='60'  caption='Sales Per  Employee in 1996'  decimalPrecision='2'  chartLeftMargin='0' chartRightMargin='0' chartTopMargin='0' ><set name='Leverling' value='100524' color='AFD8F8' /><set name='Fuller' value='87790' color='FF0000' /><set name='Davolio' value='81898' color='F6BD0F' /><set name='Peacock' value='76438' color='8BBA00' /><set name='Callahan' value='55091' color='A66EDD' /><set name='King' value='57430' color='F984A1' /><set name='Dodsworth' value='43962' color='CCCC00' /><set name='Suyama' value='22474' color='999999' /><set name='Buchanan' value='21637' color='0099CC' /></graph>";
+			//Return data
+			return strXML;
+		}
+		
+		function report (){
+			var chart1 = new FusionCharts(templatePath, "chart1Id", "600", "400");		   
+			//Initialize graph with chart data returned by generateXML() function. [ note: the parameter 'this.document.productSelector.AnimateChart.checked' is passed to set animation property of the chart]
+			//loading XML data into variable strXML 
+			var strXML=generateXML();
+			chart1.setDataXML(strXML);
+			chart1.render("TopEmployeesDiv");
+			
+		}
+		
+	</SCRIPT>
+</HEAD>
+<BODY>
+<table width="1%" border="0" cellpadding="2" cellspacing="0" class="lightYellowBorderTable">
+	<tr> 
+	  <td class="lightYellowTr" height="25px"><div align="center"><span class="headingtable">Employee Sales for 1996</span></div></td>
+	</tr>
+	<tr> 
+		<td align="center" valign="middle" > 
+			
+	<!-- START Script Block for Chart TopEmployees -->
+	<div id='TopEmployeesDiv' align='center'>
+		Chart.
+	</div>
+	  </td>
+	</tr>
+	<tr>
+		<td valign="middle">
+			<center><table width='98%' border='0' cellpadding='2' cellspacing='0' ><tr><td 	colspan=5 height='2' class='gridBorderBottom gridNoFont'>&nbsp;</td></tr><TR><td class='text gridLightStrip'>&nbsp;</td><TD valign='middle' align='center' width='15' height='10px' class='gridLightStrip'><div class='gridColorDIV' style='background-color:#AFD8F8;' >&nbsp;</div></td><td class='text gridLightStrip'>Leverling</td><td align='right' class='text gridLightStrip'>$100,524.89</td><td class='text gridLightStrip'>&nbsp;</td></TR><TR><td class='text gridDarkStrip'>&nbsp;</td><TD valign='middle' align='center' width='15' height='10px' class='gridDarkStrip'><div class='gridColorDIV' style='background-color:#FF0000;' >&nbsp;</div></td><td class='text gridDarkStrip'>Fuller</td><td align='right' class='text gridDarkStrip'>$87,790.71</td><td class='text gridDarkStrip'>&nbsp;</td></TR><TR><td class='text gridLightStrip'>&nbsp;</td><TD valign='middle' align='center' width='15' height='10px' class='gridLightStrip'><div class='gridColorDIV' style='background-color:#F6BD0F;' >&nbsp;</div></td><td class='text gridLightStrip'>Davolio</td><td align='right' class='text gridLightStrip'>$81,898.38</td><td class='text gridLightStrip'>&nbsp;</td></TR><TR><td class='text gridDarkStrip'>&nbsp;</td><TD valign='middle' align='center' width='15' height='10px' class='gridDarkStrip'><div class='gridColorDIV' style='background-color:#8BBA00;' >&nbsp;</div></td><td class='text gridDarkStrip'>Peacock</td><td align='right' class='text gridDarkStrip'>$76,438.20</td><td class='text gridDarkStrip'>&nbsp;</td></TR><TR><td class='text gridLightStrip'>&nbsp;</td><TD valign='middle' align='center' width='15' height='10px' class='gridLightStrip'><div class='gridColorDIV' style='background-color:#A66EDD;' >&nbsp;</div></td><td class='text gridLightStrip'>Callahan</td><td align='right' class='text gridLightStrip'>$55,091.21</td><td class='text gridLightStrip'>&nbsp;</td></TR><TR><td class='text gridDarkStrip'>&nbsp;</td><TD valign='middle' align='center' width='15' height='10px' class='gridDarkStrip'><div class='gridColorDIV' style='background-color:#F984A1;' >&nbsp;</div></td><td class='text gridDarkStrip'>King</td><td align='right' class='text gridDarkStrip'>$57,430.05</td><td class='text gridDarkStrip'>&nbsp;</td></TR><TR><td class='text gridLightStrip'>&nbsp;</td><TD valign='middle' align='center' width='15' height='10px' class='gridLightStrip'><div class='gridColorDIV' style='background-color:#CCCC00;' >&nbsp;</div></td><td class='text gridLightStrip'>Dodsworth</td><td align='right' class='text gridLightStrip'>$43,962.25</td><td class='text gridLightStrip'>&nbsp;</td></TR><TR><td class='text gridDarkStrip'>&nbsp;</td><TD valign='middle' align='center' width='15' height='10px' class='gridDarkStrip'><div class='gridColorDIV' style='background-color:#999999;' >&nbsp;</div></td><td class='text gridDarkStrip'>Suyama</td><td align='right' class='text gridDarkStrip'>$22,474.91</td><td class='text gridDarkStrip'>&nbsp;</td></TR><TR><td class='text gridLightStrip'>&nbsp;</td><TD valign='middle' align='center' width='15' height='10px' class='gridLightStrip'><div class='gridColorDIV' style='background-color:#0099CC;' >&nbsp;</div></td><td class='text gridLightStrip'>Buchanan</td><td align='right' class='text gridLightStrip'>$21,637.00</td><td class='text gridLightStrip'>&nbsp;</td></TR><tr><td colspan=5>&nbsp;</td></tr></table></center>
+		</td>
+	</tr>
+</table>
+
+		
+		<script language="JavaScript">					
+		$(function() {
+		    // The url for our json data
+		    var jsonurl = "/report/AjaxServlet2";
+
+		    $.ajax({
+		        async: false,
+		        url: jsonurl,
+		        dataType: "json",
+		        success: function(msg) {
+					templatePath="./swf/FCF_Pie3D.swf";
+		            report();           
+				},
+				error : function() {
+				}
+			});
+
+		});
+		</script>
+		<BR />
+	
+</BODY>
+</HTML>

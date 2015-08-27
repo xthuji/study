@@ -1,0 +1,48 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<TITLE>FusionCharts Free - Client Side Chart Plotting</TITLE>	
+	<SCRIPT LANGUAGE="Javascript" SRC="../js/FusionCharts.js"></SCRIPT>
+	<SCRIPT LANGUAGE="Javascript" SRC="../js/jquery-1.4.4.min.js"></SCRIPT>
+	
+	<SCRIPT LANGUAGE="JavaScript">
+		var templatePath = "";
+		//var data = "<graph caption='Monthly Unit Sales' xAxisName='Month' yAxisName='Units' decimalPrecision='0' formatNumberScale='0'><set name='Jan' value='462' color='AFD8F8' /><set name='Feb' value='857' color='F6BD0F' /><set name='Mar' value='671' color='8BBA00' /><set name='Apr' value='494' color='FF8E46'/><set name='May' value='761' color='008E8E'/><set name='Jun' value='960' color='D64646'/><set name='Jul' value='629' color='8E468E'/><set name='Aug' value='622' color='588526'/><set name='Sep' value='376' color='B3AA00'/><set name='Oct' value='494' color='008ED6'/><set name='Nov' value='761' color='9D080D'/><set name='Dec' value='960' color='A186BE'/></graph>";
+		var xmlData = "";
+		function report (){
+			var chart1 = new FusionCharts(templatePath, "chart1", "900", "600");
+			chart1.setDataXML(xmlData);
+			chart1.render("chart1div");
+		}
+		
+	</SCRIPT>
+</HEAD>
+<BODY>
+	<CENTER>
+		<div id="chart1div">
+			FusionCharts
+		</div>
+		<script language="JavaScript">					
+		$(function() {
+		    // The url for our json data
+		    var jsonurl = "/report/AjaxServletXml";
+
+		    $.ajax({
+		        async: false,
+		        url: jsonurl,
+		        dataType: "text",
+		        success: function(msg) {
+					templatePath="./swf/FCF_MSColumn3D.swf";
+					xmlData = msg;
+		            report();           
+				},
+				error : function() {
+				}
+			});
+
+		});
+		</script>
+		<BR />
+	</CENTER>
+</BODY>
+</HTML>

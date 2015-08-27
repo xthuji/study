@@ -1,0 +1,47 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+  <title>jQuery Tools standalone demo</title>
+
+    <!-- include the Tools -->
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+  <script src="http://cdn.jquerytools.org/1.2.7/full/jquery.tools.min.js"></script>
+  
+  <!-- standalone page styling (can be removed) -->
+  <link rel="shortcut icon" href="http://jquerytools.org/media/img/favicon.ico">
+  <link rel="stylesheet" href="http://jquerytools.org/media/css/tabs.css" type="text/css" media="screen" />
+  <link rel="stylesheet" href="http://jquerytools.org/media/css/tabs-panes.css" type="text/css" media="screen" />
+</head>
+<body><!-- the tabs -->
+<ul class="tabs">
+	<li><a href="#">Tab 1</a></li>
+	<li><a href="#">Tab 2</a></li>
+	<li><a href="#" id="tab3" style="display: block">Tab 3</a></li>
+</ul>
+
+<!-- tab "panes" -->
+<div class="panes">
+	<div>First tab content. Tab contents are called "panes"</div>
+	<div>Second tab content</div>
+	<div>Third tab content</div>
+</div>
+
+<input type="button" value="隐藏" onclick="change(0)">
+<input type="button" value="显示" onclick="change(1)">
+<script>
+// perform JavaScript after the document is scriptable.
+$(function() {
+    // setup ul.tabs to work as tabs for each div directly under div.panes
+    $("ul.tabs").tabs("div.panes > div");
+});
+function change(flag){
+    if(flag==0)
+    	$("#tab3").hide();
+    else
+    	$("#tab3").show();
+	
+}
+</script>
+</body>
+</html>
