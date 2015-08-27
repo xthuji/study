@@ -5,3 +5,7 @@
 /**/*.project
 /**/bin
 *.class
+*.iml
+.project
+.classpath
+.idea
