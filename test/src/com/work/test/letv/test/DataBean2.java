@@ -2,6 +2,8 @@ package com.work.test.letv.test;
 public class DataBean2{
     /** 订单号 */
     private String orderId = "";
+    /** 客户名称 */
+    private String customer = "";
     /** 收货人姓名 */
     private String user = "";
     /** 所在省 */
@@ -22,26 +24,14 @@ public class DataBean2{
     private String invoiceType = "";
     /** 发票抬头 */
     private String invoiceTitle = "";
-    /** 商品编码/套装编码 */
-    private String productCode = "";
-    /** 价格 */
-    private String price = "";
-    /** 订货数量 */
-    private Object productNum = 0;
-    /** 支付订单号 */
-    private Object payOrderId = 0L;
-    /** userid */
-    private Object userId = 0;
-    /** 支付时间 */
-    private String payTime = "";
-    /** 客户名称 */
-    private String customer = "";
     /** 备注 */
     private String remark = "";
     /** oa编号 */
     private String oa = "";
     /** 合同 */
     private String contract = "";
+    /** 支付订单号 */
+    private Object payOrderId = 0L;
     /** 部门 */
     private String department = "";
     /** 是否返利 */
@@ -50,8 +40,12 @@ public class DataBean2{
     private String useFanLi = "";
     /** 是否上门 */
     private String isShangmen = "";
-    
-    
+    /** 商品编码/套装编码 */
+    private String productCode = "";
+    /** 价格 */
+    private String price = "";
+    /** 订货数量 */
+    private Object productNum = 0;
     public String getUseFanLi() {
         return useFanLi;
     }
@@ -189,18 +183,6 @@ public class DataBean2{
     }
     public void setPayOrderId(Object payOrderId) {
         this.payOrderId = payOrderId;
-    }
-    public Object getUserId() {
-        return userId;
-    }
-    public void setUserId(Object userId) {
-        this.userId = userId;
-    }
-    public String getPayTime() {
-        return payTime;
-    }
-    public void setPayTime(String payTime) {
-        this.payTime = payTime;
     }
 
 }
