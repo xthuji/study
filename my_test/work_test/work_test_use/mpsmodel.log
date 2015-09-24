@@ -1,3 +1,42 @@
-2015-08-28 15:46:49,991 INFO [net.sf.jxls.transformer.SheetTransformer] - Processing sheet: '报表 '
-2015-08-28 16:05:33,470 INFO [net.sf.jxls.transformer.SheetTransformer] - Processing sheet: '报表 '
-2015-08-28 16:06:12,457 INFO [net.sf.jxls.transformer.SheetTransformer] - Processing sheet: '报表 '
+2015-09-24 09:12:20,601 INFO [org.apache.axis2.deployment.ModuleDeployer] - Deploying module: addressing-1.6.2 - file:/C:/Users/huji/.m2/repository/org/apache/axis2/axis2/1.6.2/axis2-1.6.2.jar
+2015-09-24 09:12:41,949 INFO [org.apache.commons.httpclient.HttpMethodDirector] - I/O exception (java.net.ConnectException) caught when processing request: Connection timed out: connect
+2015-09-24 09:12:41,949 INFO [org.apache.commons.httpclient.HttpMethodDirector] - Retrying request
+2015-09-24 09:13:02,952 INFO [org.apache.commons.httpclient.HttpMethodDirector] - I/O exception (java.net.ConnectException) caught when processing request: Connection timed out: connect
+2015-09-24 09:13:02,952 INFO [org.apache.commons.httpclient.HttpMethodDirector] - Retrying request
+2015-09-24 09:13:23,951 INFO [org.apache.commons.httpclient.HttpMethodDirector] - I/O exception (java.net.ConnectException) caught when processing request: Connection timed out: connect
+2015-09-24 09:13:23,951 INFO [org.apache.commons.httpclient.HttpMethodDirector] - Retrying request
+2015-09-24 09:13:44,969 INFO [org.apache.axis2.transport.http.HTTPSender] - Unable to sendViaPost to url[http://172.16.5.22:9090/axis2/services/MyService?wsdl]
+java.net.ConnectException: Connection timed out: connect
+	at java.net.DualStackPlainSocketImpl.waitForConnect(Native Method)
+	at java.net.DualStackPlainSocketImpl.socketConnect(DualStackPlainSocketImpl.java:85)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:339)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:200)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:182)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:579)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at org.apache.commons.httpclient.protocol.ReflectionSocketFactory.createSocket(ReflectionSocketFactory.java:140)
+	at org.apache.commons.httpclient.protocol.DefaultProtocolSocketFactory.createSocket(DefaultProtocolSocketFactory.java:125)
+	at org.apache.commons.httpclient.HttpConnection.open(HttpConnection.java:707)
+	at org.apache.commons.httpclient.MultiThreadedHttpConnectionManager$HttpConnectionAdapter.open(MultiThreadedHttpConnectionManager.java:1361)
+	at org.apache.commons.httpclient.HttpMethodDirector.executeWithRetry(HttpMethodDirector.java:387)
+	at org.apache.commons.httpclient.HttpMethodDirector.executeMethod(HttpMethodDirector.java:171)
+	at org.apache.commons.httpclient.HttpClient.executeMethod(HttpClient.java:397)
+	at org.apache.axis2.transport.http.AbstractHTTPSender.executeMethod(AbstractHTTPSender.java:621)
+	at org.apache.axis2.transport.http.HTTPSender.sendViaPost(HTTPSender.java:193)
+	at org.apache.axis2.transport.http.HTTPSender.send(HTTPSender.java:75)
+	at org.apache.axis2.transport.http.CommonsHTTPTransportSender.writeMessageWithCommons(CommonsHTTPTransportSender.java:404)
+	at org.apache.axis2.transport.http.CommonsHTTPTransportSender.invoke(CommonsHTTPTransportSender.java:231)
+	at org.apache.axis2.engine.AxisEngine.send(AxisEngine.java:443)
+	at org.apache.axis2.description.OutInAxisOperationClient.send(OutInAxisOperation.java:406)
+	at org.apache.axis2.description.OutInAxisOperationClient.executeImpl(OutInAxisOperation.java:229)
+	at org.apache.axis2.client.OperationClient.execute(OperationClient.java:165)
+	at org.apache.axis2.client.ServiceClient.sendReceive(ServiceClient.java:555)
+	at org.apache.axis2.client.ServiceClient.sendReceive(ServiceClient.java:531)
+	at org.apache.axis2.rpc.client.RPCServiceClient.invokeBlocking(RPCServiceClient.java:102)
+	at com.hj.test.work.letv.RPCServerClientTest.axis2RPCInvoke(RPCServerClientTest.java:36)
+	at com.hj.test.work.letv.RPCServerClientTest.main(RPCServerClientTest.java:45)

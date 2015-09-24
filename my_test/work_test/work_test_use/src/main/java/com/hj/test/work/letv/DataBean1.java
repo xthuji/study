@@ -1,4 +1,4 @@
-package com.hj.test.letv.test;
+package com.hj.test.work.letv;
 public class DataBean1{
     /** 收货人姓名 */
     private String user = "";

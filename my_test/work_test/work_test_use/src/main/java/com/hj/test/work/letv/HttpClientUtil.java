@@ -1,4 +1,4 @@
-package com.hj.test.letv.test;
+package com.hj.test.work.letv;
 
 import java.net.URI;
 import java.net.URL;

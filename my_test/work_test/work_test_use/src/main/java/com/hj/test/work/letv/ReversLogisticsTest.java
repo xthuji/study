@@ -1,4 +1,4 @@
-package com.hj.test.letv.test;
+package com.hj.test.work.letv;
 
 import org.junit.Test;
 

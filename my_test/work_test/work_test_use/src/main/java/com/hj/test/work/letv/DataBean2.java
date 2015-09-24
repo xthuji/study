@@ -1,4 +1,4 @@
-package com.hj.test.letv.test;
+package com.hj.test.work.letv;
 public class DataBean2{
     /** 订单号 */
     private String orderId = "";
