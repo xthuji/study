@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import com.hj.test.tools.GsonUtils;
 import com.hj.test.tools.HttpUtils;
+import com.hj.test.tools.PathUtil;
 import com.hj.test.usetest.ReadFile;
 
 public class TestCoupon {
@@ -84,14 +85,7 @@ public class TestCoupon {
         }
         return list;
     }
-    
-    public static String getRealPath(String path) {
-        String basePath = new ReadFile().getClass().getClassLoader()
-                .getResource("").getPath();
-        String pathString = basePath + path;
-        return pathString;
-    }
-    
+
     private static Map<String, String> buildMap(String tempString) {
         Map<String, String> map = new HashMap<String, String>();
         if (StringUtils.isNotEmpty(tempString)) {
@@ -104,7 +98,7 @@ public class TestCoupon {
 
     public static void main(String[] args) {
         String path = "coupon.txt";
-        String filePaht = getRealPath(path);
+        String filePaht = PathUtil.getRealPath(path);
         System.out.println(filePaht);
         List<Map<String,String>> list = readFile(filePaht);
         for (Map<String, String> map : list) {

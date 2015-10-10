@@ -6,11 +6,13 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+import com.hj.test.tools.PathUtil;
+
 public class ReadFile {
 
 	public static void main(String[] args) {
 		String path = "a.txt";
-		String filePaht = getRealPath(path);
+		String filePaht = PathUtil.getRealPath(path);
 		System.out.println(filePaht);
 
 		readFile(filePaht);
@@ -44,19 +46,5 @@ public class ReadFile {
         }
 	}
 
-	public static String getRealPath(String path) {
-		String basePath = new ReadFile().getClass().getClassLoader()
-				.getResource("").getPath();
-		String pathString = basePath + path;
-		
-//		String pathString = null;
-//		try {
-//			pathString = new ReadFile().getClass().getClassLoader().getResource(path).toURI().getPath();
-//		} catch (URISyntaxException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		return pathString;
-	}
 
 }

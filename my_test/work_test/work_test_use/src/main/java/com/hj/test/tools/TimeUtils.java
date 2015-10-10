@@ -24,6 +24,7 @@ public class TimeUtils {
     public static final int Y_H_M_H_M_S_2 = 7;
     public static final int yyyy_MM_ddTHH_mm_ss_z = 8;
     public static final String sdfString = "yyyy-MM-dd HH:mm:ss";
+    public static final String sdfStr = "yyyyMMddHHmmss";
     public static String SDF_YYYY_MM_DD_00 = "yyyy-MM-dd 00:00:00";
     public static String SDF_YYYY_MM_DD = "yyyy-MM-dd";
     public static String SDF_YYYYMM = "yyyyMM";
