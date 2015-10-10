@@ -9,3 +9,5 @@
 .project
 .classpath
 .idea
+/demo/task-demo/mpsmodel.log
+/my_test/work_test/work_test_use/mpsmodel.log
