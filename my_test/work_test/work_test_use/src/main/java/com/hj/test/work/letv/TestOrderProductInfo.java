@@ -1,6 +1,7 @@
 package com.hj.test.work.letv;
 
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -15,12 +16,13 @@ import com.hj.test.tools.FileReadUtil;
 import com.hj.test.tools.GsonUtils;
 import com.hj.test.tools.HttpUtils;
 import com.hj.test.tools.PathUtil;
+import com.hj.test.tools.SqlHelper;
 
 public class TestOrderProductInfo {
 
-
     private static final Logger logger   = LoggerFactory.getLogger(TestOrderProductInfo.class);
     
+    private static final int QUERY_SLEEP_SIZE = 17;
     private static final String SPLIT_STR = ",";
 
     private static final String rateUrl  = "http://srp.shop.letv.com/OpenTaxRate/getRateBySkuNo.do?SkuNo=";
@@ -30,9 +32,9 @@ public class TestOrderProductInfo {
 
     private static final String INVOICE_ORDER_TXT = "invoice_order.txt";
 
-    static String orderIds = "4008994809057";
+    static String orderIds = "3994614472287";
 //    static String orderIds = "399062104826994614750232, 3994615619076, 3994614129179, 3994610005585, 4008870407057, 4008878959471, 4008878494280, 4008871417341, 3994619880874, 4008872003398, 4008875126341";
-    static boolean useFile = true;//是否读取文件中的订单号,忽略orderIds
+    static boolean useFile = false;//是否读取文件中的订单号,忽略orderIds
     
     static boolean needArea = false;//需要地区名称
     static boolean needRate = true;//读取税率
@@ -52,6 +54,7 @@ public class TestOrderProductInfo {
         logMap.put("rateList", new ArrayList<String>());//发票税率
         logMap.put("unitList", new ArrayList<String>());//发票单位
         logMap.put("errorlist", new ArrayList<String>());//请求失败
+        logMap.put("resetList", new ArrayList<String>());//需要重置的订单
         logMap.put("okList", new ArrayList<String>());//正常订单
         batchQuery(logMap);
         for (String key : logMap.keySet()) {
@@ -72,7 +75,7 @@ public class TestOrderProductInfo {
             if (StringUtils.isNotBlank(orderId)) {
                 Map<String, Object> resultMap = new LinkedHashMap<String, Object>();
                 queryOrder(orderId, resultMap, logMap);
-                if (i%97==0) {
+                if (i%QUERY_SLEEP_SIZE==0) {
                     try {
                         Thread.sleep(500);
                     } catch (InterruptedException e) {
@@ -92,6 +95,7 @@ public class TestOrderProductInfo {
         List<String> invoicePriceErrorlist = logMap.get("invoicePriceErrorlist");
         List<String> rateList = logMap.get("rateList");
         List<String> unitList = logMap.get("unitList");
+        List<String> resetList = logMap.get("resetList");
         List<String> okList = logMap.get("okList");
         
         resultMap.put("orderId", orderId);
@@ -203,7 +207,19 @@ public class TestOrderProductInfo {
                 } else if (!valueEquals(getBigDecimal(invoiceAmount), invoiceTotal)) {//发票金额对不上，天猫订单
                     invoicePriceErrorlist.add(orderId);
                 } else {
-                    okList.add(orderId);
+                    String sql = "SELECT * FROM (SELECT t1.order_id,t1.update_at,t2.operate_type,t3.update_time,t3.yn FROM zx_event_queue.shipments_queue AS t1 LEFT JOIN zx_invoice.operate_log AS t2 ON t1.order_id = t2.order_id LEFT JOIN zx_invoice.split_task t3 ON t1.order_id = t3.keyword1 WHERE t2.operate_type = 4 AND t1.execute_count >= 1 AND t1.`status` = 2 AND t2.yn = 1 AND t1.order_id = ? ORDER BY t3.update_time DESC LIMIT 1) temp WHERE yn = 0 AND update_at > update_time";
+                    String[] params = {orderId};
+                    java.sql.ResultSet rb = SqlHelper.executeQuery(sql, params);
+                    try {
+                        if(rb != null && rb.getRow()==1){
+                            resetList.add(orderId);
+                        } else {
+                            okList.add(orderId);
+                        }
+                    } catch (SQLException e) {
+                        logger.error("sql query error, orderId={}",orderId);
+                        okList.add(orderId);
+                    }
                 }
             }
             if (orderLog) {
