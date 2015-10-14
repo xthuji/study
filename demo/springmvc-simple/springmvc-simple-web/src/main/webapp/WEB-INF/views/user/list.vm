@@ -1,0 +1,161 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>测试用户列表</title>
+<link rel="stylesheet" type="text/css" href="#springUrl('/static/css/erpbase.css')">
+<link rel="stylesheet" type="text/css" href="#springUrl('/static/css/erpmanage.css')">
+<script type="text/javascript" src="#springUrl('/static/js/jquery-1.js')"></script>
+<SCRIPT type="text/javascript" src="#springUrl('/static/js/DatePicker/WdatePicker.js')"></SCRIPT>
+<script type="text/javascript" src="#springUrl('/static/js/jquery.form.js')"></script>
+<script type="text/javascript" src="#springUrl('/static/js/common/checkCommon.js')"></script>
+</head>
+
+<script type="text/javascript">
+$(document).ready(function() {
+
+	if ("$!user" != "") {
+		// 初始化查询条件
+		$("#userCode").val("$!user.userCode");
+		$("#userName").val("$!user.userName");
+		$("#sex").val("$!user.sex");
+	}
+	
+	$("#select").click(function() {
+		$("#selectUserList").submit();
+	});
+	
+	// 进入新增或修改页面
+	$("#insert").click(function() {
+		$("#selectUserList").attr("action", '#springUrl("/user/addOrUpdate")');
+		$("#selectUserList").attr("method", "GET");
+		$("#selectUserList").submit();
+		return false;
+	});
+});
+
+function selectInt(obj){
+	return $(obj).html("<option value=''>所有</option>");
+}
+
+function deleteUser(id) {
+	if (id == '' || id <= 0) {
+		return;
+	}
+	jQuery.ajax({
+		type: 'POST',
+		contentType : 'application/json',
+		url : '#springUrl("/user/delete")',
+		dataType : 'json',
+		data : '{"userId": "' + id + '", "_temp": "' + new Date().getTime() + '"}',
+		success : function(data) {
+			alert(data.message);
+			if (data.code == 200) {
+				$("#selectUserList").submit();
+			}
+			return;
+		},
+		error : function(data) {
+			alert("error");
+		}
+	});
+	return false;
+}
+</script>
+
+<body>
+<div id="breadcrumb">
+  <p><a href="javascript:void(0)">系统设置</a></p>
+</div>
+<!--[if !ie]>breadcrumb<![endif]-->
+<div id="content">
+  <div class="m">
+    <div class="tbl-n">
+      <form id="selectUserList" name="selectUserList" action="#springUrl('/user/list')" method="GET">
+        <table border="0" cellpadding="0" cellspacing="0" width="70%">
+          <tbody>
+            <tr>
+			  <th align="right" width="10%">用户Code：</th>
+              <td width="15%">
+				<input type="text" id="userCode" name="userCode" value=""/>
+			  </td>
+			  <th align="right" width="10%">用户Name：</th>
+              <td width="15%">
+				<input type="text" id="userName" name="userName" value=""/>
+			  </td>
+			  <th align="right" width="10%">性别：</th>
+              <td width="15%">
+				<select class="select12" id="sex" name="sex">
+					<option value="">所有</option>
+					#if(!$null.isNull($!sexMap))
+        				#foreach($key in $sexMap.keySet())
+                            <option value="$key">${sexMap.get($key)}</option>
+    					#end
+					#end
+                </select>
+			  </td>
+			  <td width="30%" align="center">
+				<input id="select" type="button" value="查询" class="btn_c" />
+				<input id="insert" type="button" value="新增" class="btn_c" />
+			  </td>
+            </tr>
+          </tbody>
+        </table>
+      </form>
+    </div>
+  </div>
+  <!--[if !ie]>tbl-n<![endif]-->
+  <div id="opening">
+    <div class="tbl-list">
+      <div class="tbl-bg">
+        <table cellspacing=0 cellpadding=0 width="100%" class="tb-x1">
+          <thead>
+            <tr>
+			  <th>序号</th>
+              <th>ID</th>
+              <th>CODE</th>
+              <th>NAME</th>
+              <th>性别</th>
+              <th>创建时间</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+			#if(!$null.isNull($!userMap))
+				#foreach($key in $userMap.keySet())
+					#set($user=${userMap.get($key)})
+				<tr class="a2" style="">
+                  <td>$velocityCount</td>
+                  <td>$!user.userId</td>
+                  <td>$!user.userCode</td>
+                  <td>$!user.userName</td>
+                  <td>$!sexMap.get($!user.sex)</td>
+                  <td>$!dateTool.format("yyyy-MM-dd HH:mm:ss", $!user.createTime)</td>
+                  <td>
+					<a href='#springUrl("/user/addOrUpdate?userId=$!user.userId")'>
+						修改
+					</a>
+					&nbsp;
+					<a href='javascript:void(0);' onclick="javascript:deleteUser($!user.userId);return false;">
+						删除
+					</a>
+				  </td>
+                </tr>
+				#end
+			#else
+				<tr class="a2" style="">
+					<td colspan="12" align="left">
+						无数据！
+                    </td>
+                </tr>
+			#end
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!--[if !ie]>tbl-list<![endif]-->
+  </div>
+  <!--opening end-->
+</div>
+</body>
+</html>

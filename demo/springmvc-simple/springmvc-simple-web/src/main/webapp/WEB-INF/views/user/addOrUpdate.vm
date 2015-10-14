@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>测试用户</title>
+<link rel="stylesheet" type="text/css" href="#springUrl('/static/css/erpbase.css')">
+<link rel="stylesheet" type="text/css" href="#springUrl('/static/css/erpmanage.css')">
+<script type="text/javascript" src="#springUrl('/static/js/jquery-1.js')"></script>
+<SCRIPT type="text/javascript" src="#springUrl('/static/js/DatePicker/WdatePicker.js')"></SCRIPT>
+<script type="text/javascript" src="#springUrl('/static/js/jquery.form.js')"></script>
+<script type="text/javascript" src="#springUrl('/static/js/common/checkCommon.js')"></script>
+</head>
+
+<script type="text/javascript">
+$(document).ready(function() {
+
+	$("#sex").val("$!user.sex");
+
+	// 提交申请页面
+	var options = {
+        success: function(data) {
+			if (data.code == "200") {
+       			alert("保存成功！");
+				location.href = '#springUrl("/user/list")';
+			} else {
+				$("#submitbutton").attr("disabled", false);
+				alert(data.result);
+			}
+    	}
+	};
+
+	$("#submitbutton").click(function() {
+		// 验证参数
+		if (!checkNull($("#userCode").val())) {
+			alert("用户Code值不能为空！");
+			return false;
+		}
+		
+		$("#submitbutton").attr("disabled", true);
+		
+		// 提交表单
+		$("#saveUser").ajaxSubmit(options);
+		return false;
+	});
+});
+
+</script>
+
+<body>
+<div id="breadcrumb">
+  <p><a href="javascript:void(0)">测试用户</a></p>
+</div>
+<!--[if !ie]>breadcrumb<![endif]-->
+<div id="content">
+  <!--[if !ie]>tbl-n<![endif]-->
+  <div id="opening" class="noborder">
+    <div class="tbl-list">
+      <div class="tbl-bg">
+		<form id="saveUser" name="saveUser" action="#springUrl('/user/save')" method="POST">
+		  <input type="hidden" id="id" name="id" value="$!user.id"/>
+          <table id="saveTable" width="60%" border="0" class="tb-x2">
+			<tr>
+				<input type="hidden" id="userId" name="userId" value="$!user.userId"/>
+              <td align="right" class="tb_h1"> 用户Code：</td>
+              <td><input type="text" id="userCode" name="userCode" value="$!user.userCode"/></td>
+            </tr>
+			<tr>
+              <td align="right" class="tb_h1"> 用户Name：</td>
+              <td><input type="text" id="userName" name="userName" value="$!user.userName"/></td>
+            </tr>
+			<tr>
+			  <td align="right" class="tb_h1">性别：</td>
+              <td>
+    			<select class="select12" id="sex" name="sex">
+    				<option value="">所有</option>
+    				#if(!$null.isNull($!sexMap))
+        				#foreach($key in $sexMap.keySet())
+                            <option value="$key">${sexMap.get($key)}</option>
+    					#end
+    				#end
+                </select>
+    		  </td>
+            </tr>
+			<tr>
+              <th colspan="2" align="center">
+    			<input type="button" id="submitbutton" value="提交" class="btn_c">
+                <input type="button" id="resetButton" value="重置" class="btn_c">
+                <input type="button" id="goBack" onclick="javascript:history.go(-1);" value="返回" class="btn_c">
+    		  </th>
+            </tr>
+		  </table>
+        </form>
+      </div>
+    </div>
+    <!--[if !ie]>tbl-list<![endif]-->
+  </div>
+  <!--opening end-->
+</div>
+</body></html>
