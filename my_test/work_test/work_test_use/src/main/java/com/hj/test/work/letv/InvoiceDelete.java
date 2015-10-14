@@ -35,10 +35,10 @@ public class InvoiceDelete {
     static String test_url = "http://test.invoice.shop.letv.com/orders/resetOrder?orderCode=";
     static String online_url = "http://invoice.shop.letv.com/orders/resetOrder?orderCode=";
     static String orderIds = "3994610938907,3994617334087,3994611233231,3994618461375,3994612938509,3994611221945,3994618139581,3994615367746,3994611230130,3994611192220,3994616396236,3994614114664,3994611421556,3994612236223,3994614437075,3994616617392,3998543706933,4008878001600";
-    private static final int BATCH_SIZE = 4;
+    private static final int BATCH_SIZE = 2;
     private static final int THREAD_SIZE = 5;
     private static final String INVOICE_ORDER_TXT = "invoice_order.txt";
-    static boolean useFile = false;//是否使用文件中的订单号
+    static boolean useFile = true;//是否使用文件中的订单号
     static boolean is_test = false;//是否测试环境
     
     public static void main(String[] args) {
@@ -91,7 +91,7 @@ public class InvoiceDelete {
             }
         }
         logger.info("\n [thread{}],orderArray size={}",threadName,orderArrray.length);
-        logger.info("\n [thread{}],orderSet={}, \n set={}",threadName,set.size(), set);
+        logger.info("\n [thread{}],orderSet={}, \n errorOrderSet={}",threadName,set.size(), set);
     }
     
     /**

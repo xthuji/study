@@ -7,11 +7,23 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.sql.Types;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class SqlHelper {  
+    private static Logger logger = LoggerFactory.getLogger(SqlHelper.class);
     // 定义要使用的变量  
     private static Connection conn = null;  
     private static PreparedStatement ps = null;  
@@ -53,7 +65,8 @@ public class SqlHelper {
             url = pp.getProperty("url");  
             userName = pp.getProperty("userName");  
             password = pp.getProperty("password");  
-  
+            logger.info("JDBC init----driver={},url={},userName={},password={}",driver,url,userName,password);
+            
             Class.forName(driver);  
         } catch (Exception e) {  
             e.printStackTrace();  
@@ -108,6 +121,7 @@ public class SqlHelper {
             // 关闭资源  
             close(rs, ps, conn);  
         }  
+        logger.debug("executeUpdateMultiParams----sql={},parameters={}",sql, parameters);
     }  
   
     // update/delete/insert  
@@ -131,6 +145,7 @@ public class SqlHelper {
             // 关闭资源  
             close(rs, ps, conn);  
         }  
+        logger.debug("executeUpdate----sql={},parameters={}",sql, parameters);
     }  
   
     // select  
@@ -151,6 +166,7 @@ public class SqlHelper {
         } finally {  
   
         }  
+        logger.debug("executeQuery----sql={},parameters={}",sql, parameters);
         return rs;  
     }  
   
@@ -172,7 +188,8 @@ public class SqlHelper {
         } finally {  
             // 关闭资源  
             close(rs, cs, conn);  
-        }  
+        } 
+        logger.debug("callProc----sql={},parameters={}",sql, parameters);
     }  
   
     // 调用带有输入参数且有返回值的存储过程  
@@ -191,6 +208,7 @@ public class SqlHelper {
         }finally{  
              
         }  
+        logger.debug("callProcInput----sql={},parameters={}",sql, inparameters);
         return cs;  
     }  
      
@@ -211,6 +229,7 @@ public class SqlHelper {
         }finally{  
              
         }  
+        logger.debug("callProcOutput----sql={},parameters={}",sql, outparameters);
         return cs;  
     }  
   
@@ -237,4 +256,53 @@ public class SqlHelper {
             }  
         conn = null;  
     }  
+    
+
+    public static List<Map<String, String>> getAllData(java.sql.ResultSet rb) {
+        List<Map<String, String>> list = new ArrayList<Map<String,String>>();
+        try {
+            // 获取数据  
+            ResultSetMetaData metaData = rb.getMetaData();  
+            while (rb.next()) {  
+                Map<String, String> map = new HashMap<String, String>();
+                for (int i = 1; i <= metaData.getColumnCount(); i++) {  
+                    // resultSet数据下标从1开始  
+                    String columnName = metaData.getColumnName(i); 
+                    String value = "";
+                    int type = metaData.getColumnType(i);  
+                    String typeValue = "";
+                    if (Types.INTEGER == type) {
+                        // int  
+                        value = rb.getInt(i)+"";
+                        typeValue = "int";
+                    } else if (Types.VARCHAR == type) {  
+                        // String  
+                        value = rb.getString(i);
+                        typeValue = "String";
+                    } else if (Types.TIMESTAMP == type) {
+                        // Timestamp  
+                        Timestamp timestamp = null;
+                        try {
+                            timestamp = rb.getTimestamp(i);
+                        } catch (SQLException e) {
+//                            e.printStackTrace();
+                        }
+                        if (timestamp != null) {
+                            value = TimeUtils.formatDate(new Date(timestamp.getTime()));
+                        }
+                        typeValue = "Timestamp";
+                    } else {
+                        value = rb.getString(i);
+                    }
+//                    System.out.print(typeValue+"|"+ columnName + "\n");
+                    map.put(columnName.toUpperCase(), value);
+                }  
+                list.add(map);
+            }
+        } catch (SQLException e1) {
+            e1.printStackTrace();
+        }
+        return list;
+    }
+    
 }  

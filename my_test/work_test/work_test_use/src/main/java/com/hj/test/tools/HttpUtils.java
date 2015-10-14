@@ -795,7 +795,7 @@ public class HttpUtils {
             }
             EntityUtils.consume(entity);
         } catch (Exception e) {
-            logger.error("http doGet error!");
+            logger.error("http doGet error! url={}",url);
             e.printStackTrace();
         } finally {
             try {
