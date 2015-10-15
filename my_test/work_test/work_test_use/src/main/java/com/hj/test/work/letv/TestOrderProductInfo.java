@@ -20,7 +20,7 @@ import com.hj.test.tools.SqlHelper;
 
 public class TestOrderProductInfo {
 
-    private static final String SQL = "SELECT * FROM (SELECT t1.order_id,t1.update_at,t2.operate_type,t3.update_time,t3.yn FROM zx_event_queue.shipments_queue AS t1 LEFT JOIN zx_invoice.operate_log AS t2 ON t1.order_id = t2.order_id LEFT JOIN zx_invoice.split_task t3 ON t1.order_id = t3.keyword1 WHERE t2.operate_type = 4 AND t1.execute_count >= 1 AND t1.`status` = 2 AND t2.yn = 1 AND t1.order_id = ? ORDER BY t3.update_time DESC LIMIT 1) temp WHERE yn = 0 AND update_at > update_time";
+    private static final String SQL = "SELECT * FROM (SELECT t1.order_id,t1.update_at,t2.operate_type,t3.update_time,t3.yn FROM zx_event_queue.shipments_queue AS t1 LEFT JOIN zx_invoice.operate_log AS t2 ON t1.order_id = t2.order_id LEFT JOIN zx_invoice.split_task t3 ON t1.order_id = t3.keyword1 WHERE t2.operate_type = 4 AND t1.execute_count >= 1 AND t1.`status` = 2 AND t2.yn = 1 AND t1.order_id = ? ORDER BY t3.update_time DESC LIMIT 1) temp WHERE yn = 0 AND update_at < update_time";
 //    private static final String SQL = "SELECT t1.order_id,t1.update_at,t2.operate_type,t3.update_time,t3.yn FROM zx_event_queue.shipments_queue AS t1 LEFT JOIN zx_invoice.operate_log AS t2 ON t1.order_id = t2.order_id LEFT JOIN zx_invoice.split_task t3 ON t1.order_id = t3.keyword1 WHERE t2.operate_type = 4 AND t1.execute_count >= 1 AND t1.`status` = 2 AND t2.yn = 1 AND t1.order_id = ? ORDER BY t3.update_time DESC ";
 
     private static final Logger logger   = LoggerFactory.getLogger(TestOrderProductInfo.class);
@@ -214,11 +214,11 @@ public class TestOrderProductInfo {
                     String[] params = {orderId};
                     java.sql.ResultSet rb = SqlHelper.executeQuery(sql, params);
                     try {
-                        if(rb != null && rb.getRow()==1){
+                        if(rb != null && rb.next()){
                             resetList.add(orderId);
                         } else {
-//                            List<Map<String,String>> allData = SqlHelper.getAllData(rb);
-//                            logger.info("sql result={}",allData);
+                            List<Map<String,String>> allData = SqlHelper.getAllData(rb);
+                            logger.info("sql result={}",allData);
                             okList.add(orderId);
                         }
                     } catch (SQLException e) {
