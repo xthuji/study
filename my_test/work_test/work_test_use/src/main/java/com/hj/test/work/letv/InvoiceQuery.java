@@ -40,7 +40,7 @@ public class InvoiceQuery {
         if (useFile) {
             orderArrray = FileReadUtil.readFileList(PathUtil.getRealPath(INVOICE_ORDER_TXT)).toArray();
         }
-        Set<String> list = new LinkedHashSet<String>(100);
+        Set<String> errorList = new LinkedHashSet<String>(100);
         List<Object> list1 = new ArrayList<Object>();
         List<Object> list2 = new ArrayList<Object>();
         List<Object> list3 = new ArrayList<Object>();
@@ -55,24 +55,24 @@ public class InvoiceQuery {
         }
         
 //        queryInvoice(orderArrray, list);
-        new ThreadBean(list1.toArray(), list).start();
-        new ThreadBean(list2.toArray(), list).start();
-        new ThreadBean(list3.toArray(), list).start();
+        new ThreadBean(list1.toArray(), errorList).start();
+        new ThreadBean(list2.toArray(), errorList).start();
+        new ThreadBean(list3.toArray(), errorList).start();
         logger.info("\n array size={}",orderArrray.length);
     }
 
-    private static void queryInvoice(Object[] orderArrray, Set<String> list) {
+    private static void queryInvoice(Object[] orderArrray, Set<String> errorList) {
         for (int i = 0; i < orderArrray.length; i++) {
             String orderId = ((String) orderArrray[i]).trim();
             if (StringUtils.isNotBlank(orderId)) {
-                query(orderId, list);
+                query(orderId, errorList);
             }
         }
         logger.info("\n orderArray size={}",orderArrray.length);
-        logger.info("\n orderList={}, \n list={}",list.size(), list);
+        logger.info("\n errorOrder size={}, \n list={}",errorList.size(), errorList);
     }
     
-    private static void query(String orderId, Set<String> list){
+    private static void query(String orderId, Set<String> errorList){
         Map<String, String> map = new HashMap<String, String>();
         //test
 //        map.put("Cookie", "_i_c_c_cookie_=\"MWU4ZTRjNjU2M2FhY2MwY2Y1MDlhNTcxNjJiYzkxYmQ=\"; _i_u_cookie_=\"eyJ1c2VySWQiOjE1NzE4LCJ1c2VyTmFtZSI6Imh1amlAbGV0di5jb20iLCJjbk5hbWUiOiLog6HlkIkifQ==\"");
@@ -83,11 +83,11 @@ public class InvoiceQuery {
             result = HttpUtils.httpGet(url + orderId, null, "UTF-8", HttpConstant.LOCALHOST, 1, 20000, map);
         } catch (Exception e) {
             logger.error("http error, order={}",orderId);
-            list.add(orderId);
+            errorList.add(orderId);
         }
-        logger.info("orderId={},result={}",orderId,result);
-        if (StringUtil.isBlank(result) || result.indexOf("\"code\":500")<0) {
-            list.add(orderId);
+        logger.info("\n orderId={},result={}",orderId,result);
+        if (StringUtil.isBlank(result) || result.indexOf("\"code\":500")>=0) {
+            errorList.add(orderId);
         }
     }
     

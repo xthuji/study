@@ -18,12 +18,12 @@ import com.hj.test.tools.HttpUtils;
 import com.hj.test.tools.PathUtil;
 import com.hj.test.tools.SqlHelper;
 
-public class TestOrderProductInfo {
+public class InvoiceOrder {
+
+    private static final Logger logger   = LoggerFactory.getLogger(InvoiceOrder.class);
 
     private static final String SQL = "SELECT * FROM (SELECT t1.order_id,t1.update_at,t2.operate_type,t3.update_time,t3.yn FROM zx_event_queue.shipments_queue AS t1 LEFT JOIN zx_invoice.operate_log AS t2 ON t1.order_id = t2.order_id LEFT JOIN zx_invoice.split_task t3 ON t1.order_id = t3.keyword1 WHERE t2.operate_type = 4 AND t1.execute_count >= 1 AND t1.`status` = 2 AND t2.yn = 1 AND t1.order_id = ? ORDER BY t3.update_time DESC LIMIT 1) temp WHERE yn = 0 AND update_at < update_time";
 //    private static final String SQL = "SELECT t1.order_id,t1.update_at,t2.operate_type,t3.update_time,t3.yn FROM zx_event_queue.shipments_queue AS t1 LEFT JOIN zx_invoice.operate_log AS t2 ON t1.order_id = t2.order_id LEFT JOIN zx_invoice.split_task t3 ON t1.order_id = t3.keyword1 WHERE t2.operate_type = 4 AND t1.execute_count >= 1 AND t1.`status` = 2 AND t2.yn = 1 AND t1.order_id = ? ORDER BY t3.update_time DESC ";
-
-    private static final Logger logger   = LoggerFactory.getLogger(TestOrderProductInfo.class);
     
     private static final int QUERY_SLEEP_SIZE = 17;
     private static final String SPLIT_STR = ",";

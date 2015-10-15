@@ -5,12 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.sql.Types;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +18,7 @@ import com.hj.test.tools.GsonUtils;
 import com.hj.test.tools.SqlHelper;
 import com.hj.test.tools.TimeUtils;
 
-public class TestPurchase {
+public class PurchaseExcel {
     public static void main(String[] args) throws IOException {
 //        String sql = "select o.order_id,o.order_status_id,o.order_way,o.province_id,o.city_id,o.district_id,o.invoice_type,o.invoice_title, oi.product_name,oi.final_price,oi.quantity, o.paid_amount, oi.pcode,oi.product_type, o.home_installation,oi.product_id,o.financial_no,o.payment_method_id,o.oa_apply_no,o.contract_no,o.valid_name,o.sales_dept, coi.customer_name, o.storage_id,o.order_buss_flag,o.rebates_amount,o.order_desc from custom_order_info coi left join orders o on coi.order_id = o.order_id left join order_items oi on o.order_id = oi.order_id where o.order_way = 1 and coi.uid=?";
         String sql = "select o.*,oi.product_id,oi.quantity * oi.quantity_in_group as quantity,oi.final_price,oi.product_name,oi.pcode,oi.product_type,coi.uid,coi.customer_name,cd.department_name from custom_order_info coi left join orders o on coi.order_id = o.order_id left join order_items oi on o.order_id = oi.order_id LEFT JOIN customer_department cd ON o.sales_dept = cd.department_id where o.order_way = 1 and coi.uid=?";
