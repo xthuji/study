@@ -1,11 +1,8 @@
 package com.hj.test.work.letv;
 
-import org.junit.Test;
-
 public class TestMath {
-
-	@Test
-	public void testname() throws Exception {
+    
+    public static void main(String[] args) {
 		int max = 9999;
 		int num = 12000;
 		double floor = Math.floor(max/num);

@@ -18,6 +18,12 @@ import com.hj.test.tools.HttpUtils;
 import com.hj.test.tools.PathUtil;
 import com.hj.test.tools.SqlHelper;
 
+/**
+ * 发票的订单信息查询和校验
+ * @author huji
+ * @version V1.0 
+ * @since 1.0 2015年10月15日-下午2:40:27
+ */
 public class InvoiceOrder {
 
     private static final Logger logger   = LoggerFactory.getLogger(InvoiceOrder.class);
@@ -68,6 +74,11 @@ public class InvoiceOrder {
         }
     }
 
+    /**
+     * 批量查询订单信息
+     * @author huji
+     * @param logMap    错误订单分类map
+     */
     private static void batchQuery(Map<String, List<String>> logMap) {
         Object[] orderArrray = orderIds.split(SPLIT_STR);
         if (useFile) {
@@ -90,6 +101,13 @@ public class InvoiceOrder {
         logger.info("\n orderArrray size={}",orderArrray.length);
     }
 
+    /**
+     * 查询订单信息
+     * @author huji
+     * @param orderId   订单号
+     * @param resultMap 订单结果map
+     * @param logMap    错误订单分类map
+     */
     private static void queryOrder(String orderId, Map<String, Object> resultMap, Map<String, List<String>> logMap) {
         List<String> invoiceNoList = logMap.get("invoiceNoList");
         List<String> priceErrorlist = logMap.get("priceErrorlist");
@@ -239,22 +257,41 @@ public class InvoiceOrder {
     /**
      * 值相等
      * @author huji
-     * @param onAmount
+     * @param value1
+     * @param value2
+     * @return
+     */
+    private static boolean valueEquals(BigDecimal value1, BigDecimal value2) {
+        return subtract(value1, value2).compareTo(BigDecimal.ZERO)==0;
+    }
+
+    /**
+     * 转换成BigDecimal，精度为2
+     * @author huji
+     * @param doubleValue
+     * @return
+     */
+    private static BigDecimal getBigDecimal(double doubleValue) {
+        return new BigDecimal(doubleValue).setScale(2, BigDecimal.ROUND_HALF_UP);
+    }
+
+    /**
+     * BigDecimal减法
+     * @author huji
+     * @param invoiceAmount
      * @param invoiceTotal
      * @return
      */
-    private static boolean valueEquals(BigDecimal onAmount, BigDecimal invoiceTotal) {
-        return subtract(onAmount, invoiceTotal).compareTo(BigDecimal.ZERO)==0;
-    }
-
-    private static BigDecimal getBigDecimal(double invoice_total) {
-        return new BigDecimal(invoice_total).setScale(2, BigDecimal.ROUND_HALF_UP);
-    }
-
     private static BigDecimal subtract(BigDecimal invoiceAmount, BigDecimal invoiceTotal) {
         return invoiceTotal.subtract(invoiceAmount).setScale(2, BigDecimal.ROUND_HALF_UP);
     }
 
+    /**
+     * 获取商品单位
+     * @author huji
+     * @param productId
+     * @return
+     */
     private static String getProductUnit(String productId) {
         String unit = null;
         try {
@@ -266,6 +303,12 @@ public class InvoiceOrder {
         return unit;
     }
 
+    /**
+     * 获取商品税率
+     * @author huji
+     * @param productId
+     * @return
+     */
     private static Double getProductRate(String productId) {
         Double rate = 0d;
         try {
@@ -276,6 +319,12 @@ public class InvoiceOrder {
         return rate;
     }
 
+    /**
+     * 获取地区名称
+     * @author huji
+     * @param obj
+     * @return
+     */
     private static String getAreaName(Object obj) {
         String areaJson = httpGet(areaUrl + getIntValue(obj), null);
         return (String) GsonUtils.jsonToMap(areaJson).get("areaName");
@@ -294,6 +343,12 @@ public class InvoiceOrder {
         return result;
     }
 
+    /**
+     * 订单查询结果
+     * @author huji
+     * @version V1.0 
+     * @since 1.0 2015年10月15日-下午2:39:46
+     */
     public class ResultBean{
         String message;
         List<Map<String, Object>> result;

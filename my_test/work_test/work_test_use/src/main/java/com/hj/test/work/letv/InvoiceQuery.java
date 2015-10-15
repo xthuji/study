@@ -31,9 +31,10 @@ public class InvoiceQuery {
     
 //    static String url = "http://test.invoice.shop.letv.com/invoiceItem/query?orderId=";
     static String url = "http://invoice.shop.letv.com/invoiceItem/query?orderId=";
-    static String orderIds = "4008878842659";
+    static String orderIds = "4008994143964";
     private static final String INVOICE_ORDER_TXT = "invoice_order.txt";
-    static boolean useFile = true;
+    static boolean useFile = true;//是否使用文件中的订单号
+    static boolean useThread = false;//是否使用多线程
     
     public static void main(String[] args) {
         Object[] orderArrray = orderIds.split(SPLIT_STR);
@@ -41,26 +42,36 @@ public class InvoiceQuery {
             orderArrray = FileReadUtil.readFileList(PathUtil.getRealPath(INVOICE_ORDER_TXT)).toArray();
         }
         Set<String> errorList = new LinkedHashSet<String>(100);
-        List<Object> list1 = new ArrayList<Object>();
-        List<Object> list2 = new ArrayList<Object>();
-        List<Object> list3 = new ArrayList<Object>();
-        for (int i = 0; i < orderArrray.length; i++) {
-            if (i%3==0) {
-                list1.add(orderArrray[i]);
-            } else if (i%3==1) {
-                list2.add(orderArrray[i]);
-            } else {
-                list3.add(orderArrray[i]);
-            }
-        }
         
-//        queryInvoice(orderArrray, list);
-        new ThreadBean(list1.toArray(), errorList).start();
-        new ThreadBean(list2.toArray(), errorList).start();
-        new ThreadBean(list3.toArray(), errorList).start();
+        if (useThread) {
+            List<Object> list1 = new ArrayList<Object>();
+            List<Object> list2 = new ArrayList<Object>();
+            List<Object> list3 = new ArrayList<Object>();
+            for (int i = 0; i < orderArrray.length; i++) {
+                if (i%3==0) {
+                    list1.add(orderArrray[i]);
+                } else if (i%3==1) {
+                    list2.add(orderArrray[i]);
+                } else {
+                    list3.add(orderArrray[i]);
+                }
+            }
+            
+            new ThreadBean(list1.toArray(), errorList).start();
+            new ThreadBean(list2.toArray(), errorList).start();
+            new ThreadBean(list3.toArray(), errorList).start();
+        } else {
+            queryInvoice(orderArrray, errorList);
+        }
         logger.info("\n array size={}",orderArrray.length);
     }
 
+    /**
+     * 批量查询发票明细信息
+     * @author huji
+     * @param orderArrray
+     * @param errorList
+     */
     private static void queryInvoice(Object[] orderArrray, Set<String> errorList) {
         for (int i = 0; i < orderArrray.length; i++) {
             String orderId = ((String) orderArrray[i]).trim();
@@ -72,6 +83,12 @@ public class InvoiceQuery {
         logger.info("\n errorOrder size={}, \n list={}",errorList.size(), errorList);
     }
     
+    /**
+     * 查询发票明细信息
+     * @author huji
+     * @param orderId
+     * @param errorList
+     */
     private static void query(String orderId, Set<String> errorList){
         Map<String, String> map = new HashMap<String, String>();
         //test

@@ -14,6 +14,12 @@ import com.hj.test.tools.HttpUtils;
 import com.hj.test.tools.PathUtil;
 import com.hj.test.tools.HttpUtils.HttpConstant;
 
+/**
+ * 重置发票任务
+ * @author huji
+ * @version V1.0 
+ * @since 1.0 2015年10月15日-下午2:41:22
+ */
 public class ImcReset {
 
     static Logger logger = LoggerFactory.getLogger(ImcReset.class);
@@ -22,7 +28,7 @@ public class ImcReset {
     
     static String url = "http://imc.shop.letv.com/shipmentsQueue/toReset?OrderId=";
     static String orderIds = "3994612722133, 3994613194341, 3994612781044, 3994611991295, 3994611442833, 3994612458144, 3994610720223";
-    static boolean useFile = false;//是否读取文件中的订单号,忽略orderIds
+    static boolean useFile = true;//是否读取文件中的订单号,忽略orderIds
     
     
     public static void main(String[] args) throws InterruptedException {

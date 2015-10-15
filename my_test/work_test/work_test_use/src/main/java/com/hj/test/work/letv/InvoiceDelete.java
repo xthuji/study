@@ -1,6 +1,7 @@
 package com.hj.test.work.letv;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -34,11 +35,12 @@ public class InvoiceDelete {
     static String url = null;
     static String test_url = "http://test.invoice.shop.letv.com/orders/resetOrder?orderCode=";
     static String online_url = "http://invoice.shop.letv.com/orders/resetOrder?orderCode=";
-    static String orderIds = "3994610938907,3994617334087,3994611233231,3994618461375,3994612938509,3994611221945,3994618139581,3994615367746,3994611230130,3994611192220,3994616396236,3994614114664,3994611421556,3994612236223,3994614437075,3994616617392,3998543706933,4008878001600";
+    static String orderIds = "3994611725560,4008994143964";
     private static final int BATCH_SIZE = 2;
     private static final int THREAD_SIZE = 5;
     private static final String INVOICE_ORDER_TXT = "invoice_order.txt";
     static boolean useFile = true;//是否使用文件中的订单号
+    static boolean useThread = false;//是否使用多线程
     static boolean is_test = false;//是否测试环境
     
     public static void main(String[] args) {
@@ -123,54 +125,58 @@ public class InvoiceDelete {
     }
     
     /**
-     * 拆分数据
+     * 按线程数 拆分数据为多个list
      * @author huji
      * @param orderArrray
      * @return
      */
     private static List<List<Object>> splitData(Object[] orderArrray) {
         List<List<Object>> dataList = new ArrayList<List<Object>>();
-        for (int i = 0; i < THREAD_SIZE; i++) {
-            dataList.add(new ArrayList<Object>());
-        }
-        for (int i = 0; i < orderArrray.length; i++) {
-            int index = i%THREAD_SIZE;
-            Object obj = orderArrray[i];
-            switch (index) {
-                case 0:
-                    dataList.get(index).add(obj);
-                    break;
-                case 1:
-                    dataList.get(index).add(obj);
-                    break;
-                case 2:
-                    dataList.get(index).add(obj);
-                    break;
-                case 3:
-                    dataList.get(index).add(obj);
-                    break;
-                case 4:
-                    dataList.get(index).add(obj);
-                    break;
-                case 5:
-                    dataList.get(index).add(obj);
-                    break;
-                case 6:
-                    dataList.get(index).add(obj);
-                    break;
-                case 7:
-                    dataList.get(index).add(obj);
-                    break;
-                case 8:
-                    dataList.get(index).add(obj);
-                    break;
-                case 9:
-                    dataList.get(index).add(obj);
-                    break;
-                default:
-                    dataList.get(0).add(obj);
-                    break;
+        if (useThread) {
+            for (int i = 0; i < THREAD_SIZE; i++) {
+                dataList.add(new ArrayList<Object>());
             }
+            for (int i = 0; i < orderArrray.length; i++) {
+                int index = i%THREAD_SIZE;
+                Object obj = orderArrray[i];
+                switch (index) {
+                    case 0:
+                        dataList.get(index).add(obj);
+                        break;
+                    case 1:
+                        dataList.get(index).add(obj);
+                        break;
+                    case 2:
+                        dataList.get(index).add(obj);
+                        break;
+                    case 3:
+                        dataList.get(index).add(obj);
+                        break;
+                    case 4:
+                        dataList.get(index).add(obj);
+                        break;
+                    case 5:
+                        dataList.get(index).add(obj);
+                        break;
+                    case 6:
+                        dataList.get(index).add(obj);
+                        break;
+                    case 7:
+                        dataList.get(index).add(obj);
+                        break;
+                    case 8:
+                        dataList.get(index).add(obj);
+                        break;
+                    case 9:
+                        dataList.get(index).add(obj);
+                        break;
+                    default:
+                        dataList.get(0).add(obj);
+                        break;
+                }
+            }
+        } else {
+            dataList.add(Arrays.asList(orderArrray));
         }
         return dataList;
     }
