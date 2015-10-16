@@ -31,10 +31,10 @@ public class InvoiceQuery {
     
 //    static String url = "http://test.invoice.shop.letv.com/invoiceItem/query?orderId=";
     static String url = "http://invoice.shop.letv.com/invoiceItem/query?orderId=";
-    static String orderIds = "4008994143964";
+    static String orderIds = "3994610072388";
     private static final String INVOICE_ORDER_TXT = "invoice_order.txt";
     static boolean useFile = true;//是否使用文件中的订单号
-    static boolean useThread = false;//是否使用多线程
+    static boolean useThread = true;//是否使用多线程
     
     public static void main(String[] args) {
         Object[] orderArrray = orderIds.split(SPLIT_STR);

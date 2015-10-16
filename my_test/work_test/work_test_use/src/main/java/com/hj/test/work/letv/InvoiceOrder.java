@@ -41,7 +41,7 @@ public class InvoiceOrder {
 
     private static final String INVOICE_ORDER_TXT = "invoice_order.txt";
 
-    static String orderIds = "3994614472287";
+    static String orderIds = "3994618921932";
 //    static String orderIds = "399062104826994614750232, 3994615619076, 3994614129179, 3994610005585, 4008870407057, 4008878959471, 4008878494280, 4008871417341, 3994619880874, 4008872003398, 4008875126341";
     static boolean useFile = true;//是否读取文件中的订单号,忽略orderIds
     

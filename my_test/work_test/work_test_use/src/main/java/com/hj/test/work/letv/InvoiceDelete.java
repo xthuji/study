@@ -35,12 +35,12 @@ public class InvoiceDelete {
     static String url = null;
     static String test_url = "http://test.invoice.shop.letv.com/orders/resetOrder?orderCode=";
     static String online_url = "http://invoice.shop.letv.com/orders/resetOrder?orderCode=";
-    static String orderIds = "3994611725560,4008994143964";
+    static String orderIds = "3994618120377,3994615213299,3994614124116,3994612216651,3994611188291,3994615621087,3994616748410,3994612633266,3994610930958,3994612479870,3994612272341,4008997493777";
     private static final int BATCH_SIZE = 2;
     private static final int THREAD_SIZE = 5;
     private static final String INVOICE_ORDER_TXT = "invoice_order.txt";
     static boolean useFile = true;//是否使用文件中的订单号
-    static boolean useThread = false;//是否使用多线程
+    static boolean useThread = true;//是否使用多线程
     static boolean is_test = false;//是否测试环境
     
     public static void main(String[] args) {
@@ -79,7 +79,7 @@ public class InvoiceDelete {
             if (StringUtils.isNotBlank(orderId)) {
                 sb.append(orderId).append(SPLIT_STR);
                 int index = i+1;
-                if ((index>=BATCH_SIZE && i%BATCH_SIZE==0) || (index==orderArrray.length)) {
+                if ((index>=0 && i%BATCH_SIZE==0) || (index==orderArrray.length)) {
                     try {
                         String orders = sb.toString().substring(0,sb.length()-1);
                         //删除发票
